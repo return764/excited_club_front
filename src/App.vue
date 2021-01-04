@@ -20,10 +20,10 @@
       <v-tabs
           right
       >
-        <v-tab v-for="(route,i) in routeList"
+        <v-tab v-for="(route,i) in routesLevel1"
                :key="i"
-               :to="route.to"
-        >{{ route.name }}
+               :to="route.path"
+        >{{ route.meta.name }}
         </v-tab>
       </v-tabs>
       <v-btn
@@ -41,35 +41,40 @@
 </template>
 
 <script>
+import {mapGetters} from "vuex";
+
 export default {
   name: 'App',
   components: {},
   data: () => ({
     isScrolling: false,
-    routeList: [
-      {to: "/index", name: "首页"},
-      {to: "/aboutme", name: "关于我们"},
-      {to: "/news", name: "通知公告"},
-      {to: "/outstanding", name: "杰出展示"},
-      {to: "/photos", name: "照片墙"}
-    ]
   }),
   methods: {
     onScroll() {
       this.isScrolling = (window.pageYOffset ||
           document.documentElement.scrollTop || 0) > 20
+
+      console.log(this.$route)
     }
   },
   computed: {
+    ...mapGetters("route", [
+      "routes",
+      "routesLevel1"
+    ])
   }
 };
 </script>
 
 <style>
-.background{
+.v-application .v-breadcrumbs{
+  padding-left: 12px;
+}
+.background {
   background-image: url(./assets/background.svg);
   background-repeat: repeat;
 }
+
 .top-img {
   position: absolute;
 }

@@ -8,7 +8,7 @@
       <v-container class="fill-height">
         <v-row class="fill-height justify-center align-content-center">
           <v-col cols="12">
-            <h1 class="text-center">通知公告</h1>
+            <h1 class="text-center">{{ this.$route.meta.name }}</h1>
           </v-col>
           <v-breadcrumbs :items="items">
 
@@ -20,28 +20,16 @@
 </template>
 
 <script>
+import {getBreadcrumbs} from "@/utils/routeUtil";
+
 export default {
   name: "NewsPage",
   data(){
     return{
-      items:[
-        {
-          text: 'Dashboard',
-          disabled: false,
-          href: 'breadcrumbs_dashboard',
-        },
-        {
-          text: 'Link 1',
-          disabled: false,
-          href: 'breadcrumbs_link_1',
-        },
-        {
-          text: 'Link 2',
-          disabled: true,
-          href: 'breadcrumbs_link_2',
-        },
-      ],
+      items:getBreadcrumbs(this.$route),
     }
+  },
+  computed:{
   }
 }
 </script>
