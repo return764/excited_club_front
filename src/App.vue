@@ -53,8 +53,6 @@ export default {
     onScroll() {
       this.isScrolling = (window.pageYOffset ||
           document.documentElement.scrollTop || 0) > 20
-
-      console.log(this.$route)
     }
   },
   computed: {
