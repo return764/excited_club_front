@@ -6,7 +6,7 @@
       :fixed-tabs="fixedTabs"
       :centered="centered"
   >
-    <v-tab v-for="(it,i) in tabs" :key="i">{{ it }}</v-tab>
+    <v-tab v-for="(it,i) in tabs" :to="it" :key="i">{{ it }}</v-tab>
     <v-tab-item v-for="(it,i) in tabs" :key="i" style="padding: 12px">
       <slot :name="it"/>
     </v-tab-item>

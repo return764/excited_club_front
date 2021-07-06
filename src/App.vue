@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app ref="app">
     <v-app-bar
         app
         elevate-on-scroll
@@ -14,29 +14,34 @@
             src="./assets/ORACLE CLUB.png"
             transition="scale-transition"
             width="400"
+            v-show="$vuetify.breakpoint.smAndUp"
         />
       </div>
       <v-spacer/>
       <v-tabs
           right
+          center-active
+          show-arrows
       >
-        <v-tab v-for="(route,i) in routesLevel1"
+        <v-tab v-for="(route,i) in tabRoutes"
                :key="i"
                :to="route.path"
         >{{ route.meta.name }}
         </v-tab>
       </v-tabs>
-      <v-btn
-          href="https://github.com/vuetifyjs/vuetify/releases/latest"
-          target="_blank"
-          text
-      >
-        <span>登录</span>
-      </v-btn>
+
     </v-app-bar>
-    <v-main class="grey lighten-5 background pa-0">
+    <v-main app class="grey lighten-5 background pa-0">
       <router-view/>
     </v-main>
+    <v-footer padless>
+      <v-col
+          class="text-center"
+          cols="12"
+      >
+        {{ new Date().getFullYear() }} — <strong>Vuetify</strong>
+      </v-col>
+    </v-footer>
   </v-app>
 </template>
 
@@ -58,7 +63,7 @@ export default {
   computed: {
     ...mapGetters("route", [
       "routes",
-      "routesLevel1"
+      "tabRoutes"
     ])
   }
 };

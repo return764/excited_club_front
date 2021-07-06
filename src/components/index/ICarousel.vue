@@ -1,6 +1,6 @@
 <template>
   <v-carousel
-      height="400"
+      height="100%"
       show-arrows-on-hover
       hide-delimiter-background
       delimiter-icon="mdi-minus"
@@ -9,13 +9,11 @@
         v-for="(slide, i) in slides"
         :key="i"
     >
-      <v-sheet
-          :color="colors[i]"
-          height="100%"
-          rounded="lg"
-      >
-        <v-img/>
-      </v-sheet>
+        <v-img
+            src="@/assets/oracle main.jpg"
+            height="90vh"
+            gradient="to top, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.75)"
+        />
     </v-carousel-item>
   </v-carousel>
 </template>

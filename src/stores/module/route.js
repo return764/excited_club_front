@@ -13,10 +13,14 @@ export default {
         routes(state){
             return state.routes
         },
-        routesLevel1(state){
-            return _.filter(state.routes,(o)=>{
-                return _.has(o,'component')
+        tabRoutes(state){
+            const rootRoute = _.find(state.routes,(o)=>{
+                return o.path === '/'
             })
+            const indexRoute = _.find(state.routes,(o)=>{
+                return o.path === '/index'
+            })
+            return [indexRoute,...rootRoute.children]
         }
     }
 }

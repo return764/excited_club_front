@@ -1,10 +1,14 @@
 import Vue from "vue";
-import VueRouter from 'vue-router';
 import Index from "@/pages/Index";
-import NewsPage from "@/pages/NewsPage";
-import OutstandingPage from "@/pages/OutstandingPage";
-import PhotosPage from "@/pages/PhotosPage";
-import AboutMePage from "@/pages/AboutMePage";
+import VueRouter from 'vue-router';
+import NewsInform from "@/pages/NewsInform";
+import MainLayout from "@/layouts/MainLayout";
+import ArticlePage from "@/pages/ArticlePage";
+import BlankLayout from "@/layouts/BlankLayout";
+import MainIntroduce from "@/pages/MainIntroduce";
+import PhotosTeacher from "@/pages/PhotosTeacher";
+import OtherIntroduce from "@/pages/OtherIntroduce";
+import IWaterfallList from "@/pages/IWaterfallList";
 
 const originalPush = VueRouter.prototype.push;
 VueRouter.prototype.push = function push(location) {
@@ -15,84 +19,123 @@ Vue.use(VueRouter)
 
 export const routes = [
     {
-        path: "/",
-        redirect: "/index"
-    }, {
         path: "/index",
         component: Index,
         meta: {
             name: "主页"
         },
-    },{
-        path: "/aboutme",
-        component: AboutMePage,
-        name: "关于我们",
-        meta: {
-            name: "关于我们"
-        },
-        children: [
-            {
-                path: "post/:atc?",
-                // component: Article,
-                meta: {
-                    name: "正文"
-                }
-            }
-        ]
     }, {
-        path: "/news",
-        component: NewsPage,
-        name: "通知公告",
+        path: "/",
+        component: MainLayout,
+        redirect: "/index",
         meta: {
-            name: "通知公告"
+            name: "主页"
         },
         children: [
             {
-                path: "list",
-                // component: ArticleInfoList,
+                path: "/aboutUs",
+                name: "关于我们",
                 meta: {
-                    name: "公告"
+                    name: "关于我们",
+                    parent: "aboutUs"
                 },
-            }, {
-                path: "list/:atc",
-                // component: Article,
-                meta: {
-                    name: "正文"
-                }
+                redirect:"aboutUs/oc",
+                component: BlankLayout,
+                children:[
+                    {
+                        name:"Oracle Club",
+                        path:"oc",
+                        component:MainIntroduce,
+                        meta: {
+                            name: "Oracle Club"
+                        },
+                    },
+                    {
+                        name:"方向介绍",
+                        path:"other",
+                        component: OtherIntroduce,
+                        meta: {
+                            name: "方向介绍"
+                        },
+                    }
+                ]
             },
-        ]
-    }, {
-        path: "/outstanding",
-        component: OutstandingPage,
-        name: "杰出展示",
-        meta: {
-            name: "杰出展示"
-        },
-    }, {
-        path: "/photos",
-        component: PhotosPage,
-        meta: {
-            name: "照片墙"
-        },
-        children: [
             {
-                path: "member",
-                name: "照片墙",
+                path: "/news",
+                component: BlankLayout,
+                name: "通知公告",
                 meta: {
-                    name: "成员展示"
-                }
-            }, {
-                path: "list",
-                name: "风采展示",
-                // component: WaterFallList,
-                props: {},
+                    name: "通知公告",
+                    parent: "news"
+                },
+                redirect:"news/latest",
+                children:[
+                    {
+                        name:"最新消息",
+                        path:"latest",
+                        component:ArticlePage,
+                        meta: {
+                            name: "最新消息"
+                        },
+                    },
+                    {
+                        name:"公告",
+                        path:"inform",
+                        component: NewsInform,
+                        meta: {
+                            name: "公告"
+                        },
+                    },
+                    {
+                        name: "文章",
+                        path: ":id",
+                        component: ArticlePage,
+                        meta:{
+                            name: "文章",
+                            invisible:false,
+                        }
+                    }
+                ]
+            },
+            {
+                path: "/outstanding",
+                component: BlankLayout,
+                name: "杰出展示",
                 meta: {
-                    name: "风采展示",
-                    type: "waterfall"
-                }
+                    name: "杰出展示",
+                    parent: "outstanding"
+                },
+
+            },
+            {
+                path: "/photos",
+                component: BlankLayout,
+                meta: {
+                    name: "照片墙",
+                    parent: "photos"
+                },
+                redirect:"photos/teacher",
+                children:[
+                    {
+                        name:"指导老师",
+                        path:"teacher",
+                        component:PhotosTeacher,
+                        meta: {
+                            name: "指导老师"
+                        },
+                    },
+                    {
+                        name:"风采展示",
+                        path:"waterfall",
+                        component: IWaterfallList,
+                        meta: {
+                            name: "风采展示"
+                        },
+                    }
+                ]
             }
         ]
-    }
+    },
 ]
 
 export default new VueRouter({
