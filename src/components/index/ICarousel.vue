@@ -1,16 +1,18 @@
 <template>
   <v-carousel
       height="100%"
+      :cycle="autoPlay"
+      :interval="timeout"
       show-arrows-on-hover
       hide-delimiter-background
       delimiter-icon="mdi-minus"
   >
     <v-carousel-item
-        v-for="(slide, i) in slides"
-        :key="i"
+        v-for="picture in pictures"
+        :key="picture.id"
     >
         <v-img
-            src="@/assets/oracle main.jpg"
+            :src="picture.path"
             height="90vh"
             gradient="to top, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.75)"
         />
@@ -21,22 +23,22 @@
 <script>
 export default {
   name: "ICarousel",
-  data: () => {
-    return {
-      colors: [
-        'indigo',
-        'warning',
-        'pink darken-2',
-        'red lighten-1',
-        'deep-purple accent-4',
-      ],
-      slides: [
-        'First',
-        'Second',
-        'Third',
-        'Fourth',
-        'Fifth',
-      ],
+  data(){
+    return{
+    }
+  },
+  props:{
+    pictures:{
+      type: Array,
+      required:true,
+    },
+    autoPlay:{
+      type: Boolean,
+      default: true,
+    },
+    timeout:{
+      type:[Number,String],
+      default: 6000,
     }
   }
 }

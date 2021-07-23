@@ -1,11 +1,5 @@
 <template>
   <div>
-<!--    <v-img-->
-<!--        src="../assets/oracle main.jpg"-->
-<!--        height="60vh"-->
-<!--        width="100vw"-->
-<!--        gradient="to top, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.75)"-->
-<!--    />-->
     <v-responsive :aspect-ratio="16/7"
                   :height="carouselHeight"
     >
@@ -15,7 +9,7 @@
           width="100%"
           height="100%"
       >
-        <i-carousel/>
+        <i-carousel :pictures="pictures"/>
       </v-sheet>
     </v-responsive>
     <v-container>
@@ -81,6 +75,7 @@
 <script>
 import ICarousel from "@/components/index/ICarousel";
 import IList from "@/components/common/IList";
+import pictureApi from "@/services/pictures";
 
 export default {
   name: "Index",
@@ -91,9 +86,25 @@ export default {
   data() {
     return {
       show: false,
+      pictures:[],
     }
   },
-  methods: {},
+  mounted() {
+    this.handleListCarousel()
+  },
+  methods: {
+    handleListCarousel(){
+      pictureApi.list({
+        type: 'index'
+      }).then(({data}) =>{
+        console.log(data)
+        if (data){
+          this.pictures = data.content
+        }
+        //todo 处理异常
+      })
+    }
+  },
   computed:{
     carouselHeight(){
       switch (this.$vuetify.breakpoint.name){
