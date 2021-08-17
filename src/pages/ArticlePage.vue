@@ -3,7 +3,6 @@
     <v-row justify="center">
       <v-sheet
           elevation="2"
-          height="90vh"
           :width="width"
       >
         <v-col>
@@ -112,6 +111,12 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss">
+@media #{map-get($display-breakpoints, 'sm-and-down')}{
+  .img_vsb_content{
+    height: 200px !important;
+    width: auto !important;
+  }
+}
 
 </style>

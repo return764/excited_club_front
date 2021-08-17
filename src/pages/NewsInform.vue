@@ -13,7 +13,7 @@
               :to="`/news/${item.id}`"
               :title="item.title"
               :description="item.description"
-              :head-src="item.coverImage"
+              :head-src="item.coverImage | urlImage"
               :publish-time="item.createdAt | moment"
               :read-count="item.viewCount"
             />
@@ -22,10 +22,12 @@
         </transition-group>
 
         <div class="text-center">
-          <v-pagination
+          <i-pagination
               v-model="pagination.page"
+              @change="handlePaginationChange"
               :length="pagination.totalPages"
-          ></v-pagination>
+          >
+          </i-pagination>
         </div>
       </v-col>
     </v-row>
@@ -34,13 +36,14 @@
 
 <script>
 import INewsCard from "@/components/iNewsCard";
+import IPagination from "@/components/common/IPagination";
 import articlesApi from "@/services/articles";
 import Velocity from 'velocity-animate';
 
 export default {
   name: "NewsInform",
   components:{
-    INewsCard
+    INewsCard,IPagination
   },
   data(){
     return{
@@ -71,6 +74,7 @@ export default {
     handleListArticle(){
       this.queryParams.size = this.pagination.size
       this.queryParams.page = this.pagination.page - 1
+      console.log(this.queryParams)
       articlesApi.list(this.queryParams).then(({data})=>{
         console.log(data)
         const {content,totalElements,totalPages} = data
@@ -81,12 +85,16 @@ export default {
         console.error(err)
       })
     },
+    handlePaginationChange(page){
+      this.pagination.page = page
+
+      this.handleListArticle()
+    },
     beforeEnter: function (el) {
       el.style.opacity = 0
     },
     enter: function (el, done) {
       const delay = el.dataset.index * 300
-      console.log(el.dataset)
       setTimeout(()=>{
         Velocity(
             el,
@@ -95,15 +103,12 @@ export default {
         )
       },delay)
     },
-    leave: function (el, done) {
-      const delay = el.dataset.index * 300
-      setTimeout(()=>{
+    leave: function (el, done){
         Velocity(
-            el,
-            { opacity: 1},
-            { complete: done }
+          el,
+          { opacity: 1},
+          { complete: done }
         )
-      },delay)
     }
   }
 }

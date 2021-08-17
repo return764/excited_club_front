@@ -16,7 +16,7 @@
                :width="$vuetify.breakpoint.xs?108:200"
                :max-height="$vuetify.breakpoint.xs?108:200"
                :class="$vuetify.breakpoint.xs?'my-auto':''"
-               :src="baseURL+'/'+headSrc" />
+               :src="headSrc" />
         <div class="flex d-flex flex-nowrap flex-column">
           <v-card-title v-ellipsis="1" class="text-left text-subtitle-2 text-md-h5 text-sm-h6">
             {{ title }}
