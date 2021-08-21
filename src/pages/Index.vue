@@ -20,7 +20,6 @@
           <v-row :style="{width:rowWidth}" class="mb-3 mx-auto" justify="center">
             <v-col cols="12" sm="6">
               <v-card
-                  rounded="lg"
                   elevation="2"
                   min-height="268"
                   min-width="100%"
@@ -28,22 +27,22 @@
               >
                 <v-card-title class="d-flex justify-space-between">
               <span>
-                最新消息
+                通知公告
               </span>
                   <v-btn
                       text
                       color="primary accent-4"
+                      to="/news/inform"
                   >
                     更多>
                   </v-btn>
                 </v-card-title>
                 <v-divider/>
-                <i-list/>
+                <i-list :items="newsItems"/>
               </v-card>
             </v-col>
             <v-col cols="12" sm="6">
               <v-card
-                  rounded="lg"
                   elevation="2"
                   min-height="268"
                   min-width="100%"
@@ -76,6 +75,7 @@
 import ICarousel from "@/components/index/ICarousel";
 import IList from "@/components/common/IList";
 import pictureApi from "@/services/pictures";
+import articlesApi from "@/services/articles";
 
 export default {
   name: "Index",
@@ -87,10 +87,12 @@ export default {
     return {
       show: false,
       pictures:[],
+      newsItems:[]
     }
   },
   mounted() {
     this.handleListCarousel()
+    this.handleListInfo()
   },
   methods: {
     handleListCarousel(){
@@ -102,6 +104,21 @@ export default {
           this.pictures = data.content
         }
         //todo 处理异常
+      })
+    },
+    handleListInfo(){
+      articlesApi.top(5).then(resp=>{
+        //筛选data 将所需部分href构建出来
+        for(const i of resp.data){
+          this.newsItems.push({
+            id: i.id,
+            title: i.title,
+            date: i.createdAt,
+            to: "/news/"+i.id
+          })
+        }
+      }).catch(err=>{
+        console.error(err)
       })
     }
   },

@@ -17,7 +17,6 @@
               :publish-time="item.createdAt | moment"
               :read-count="item.viewCount"
             />
-            <!-- todo 列表文章省略异常  -->
           </v-row>
         </transition-group>
 
@@ -62,12 +61,8 @@ export default {
     }
   },
   mounted() {
-    // const inter = setInterval(()=>{
-    //   this.count ++
-    //   if (this.count >= 10){
-    //     clearInterval(inter)
-    //   }
-    // },140)
+    const pageNum = sessionStorage.getItem("page_num")
+    this.pagination.page = pageNum ? Number(pageNum) : 1
     this.handleListArticle()
   },
   methods:{
@@ -87,7 +82,7 @@ export default {
     },
     handlePaginationChange(page){
       this.pagination.page = page
-
+      sessionStorage.setItem("page_num",page)
       this.handleListArticle()
     },
     beforeEnter: function (el) {

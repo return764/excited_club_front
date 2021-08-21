@@ -31,16 +31,14 @@
       </v-tabs>
 
     </v-app-bar>
-    <v-main app class="grey lighten-5 background pa-0">
+    <v-main app class="grey lighten-5 background pa-0 pb-5">
       <router-view/>
     </v-main>
-    <v-footer padless>
-      <v-col
-          class="text-center"
-          cols="12"
-      >
-        {{ new Date().getFullYear() }} — <strong>Vuetify</strong>
-      </v-col>
+    <v-footer class="footer" padless>
+      <v-container>
+        <p><v-icon size="14">mdi-copyright</v-icon>{{ new Date().getFullYear() }} Oracle Club</p>
+        <p>蜀ICP备20014393号-1</p>
+      </v-container>
     </v-footer>
   </v-app>
 </template>
@@ -69,7 +67,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 .v-application .v-breadcrumbs{
   padding-left: 12px;
 }
@@ -80,6 +78,19 @@ export default {
 
 .top-img {
   position: absolute;
+}
+.footer{
+  font-size: 14px;
+  line-height: 1.5;
+  background-color: rgba(0,0,0,1);
+  p{
+    display: flex;
+    justify-content: inherit;
+    align-items: center;
+    flex: 1 0 auto;
+    margin-bottom: .1rem !important;
+    color: rgba(0,0,0,0.45);
+  }
 }
 
 ::-webkit-scrollbar {

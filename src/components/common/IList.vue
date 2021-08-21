@@ -3,16 +3,16 @@
       subheader
       color="transparent"
   >
-    <v-list-item v-for="n in 6"
-                 :key="n"
+    <v-list-item v-for="item in items"
+                 :key="item.id"
                  link
-                 href="#"
+                 :href="item.to"
     >
       <v-list-item-title>
-        列表内容 {{ n }}
+        {{item.title}}
       </v-list-item-title>
       <v-list-item-subtitle class="text-right">
-        2020/02/12
+        {{item.date | moment("yyyy-MM-DD")}}
       </v-list-item-subtitle>
     </v-list-item>
   </v-list>
@@ -20,10 +20,27 @@
 
 <script>
 export default {
-  name: "IList"
+  name: "IList",
+  props:{
+    items:{
+      type: Array,
+      default:()=>[{
+        id:1,
+        title: "title",
+        date: "2018-10-20",
+        to: "#"
+      }]
+    }
+  }
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+::v-deep .v-list-item__title{
+  flex: 6;
+}
 
+::v-deep .v-list-item__subtitle{
+  flex: 1;
+}
 </style>
