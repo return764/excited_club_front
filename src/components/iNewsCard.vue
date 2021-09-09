@@ -1,14 +1,14 @@
 <template>
     <v-card
-        :max-width="$vuetify.breakpoint.xs?'25rem':'100%'"
         :max-height="$vuetify.breakpoint.xs?'8rem':'200px'"
-        width="100%"
+        width="inherit"
         ref="newsCard"
         :to="to"
         style="overflow: hidden"
     >
       <div class="d-flex flex-nowrap justify-space-between"
            :class="random?'flex-row-reverse':'flex-row'"
+           :style="{width:'inherit'}"
       >
         <v-img :aspect-ratio="1"
                v-if="headSrc"
@@ -17,12 +17,11 @@
                :max-height="$vuetify.breakpoint.xs?108:200"
                :class="$vuetify.breakpoint.xs?'my-auto':''"
                :src="headSrc" />
-        <div class="flex d-flex flex-nowrap flex-column">
-          <v-card-title v-ellipsis="1" class="text-left text-subtitle-2 text-md-h5 text-sm-h6">
-            {{ title }}
+        <div :style="{width: textWidth}" class="flex d-flex flex-nowrap flex-column">
+          <v-card-title class="text-subtitle-2 text-md-h5 text-sm-h6 py-1">
+            <span class="text-truncate">{{ title }}</span>
           </v-card-title>
-          <v-card-text v-ellipsis="$vuetify.breakpoint.mdAndUp?4:3"
-                       class="align-start pb-0 text-caption text-sm-body-2 text-md-body-1 text-lg-body-1 overflow-hidden">
+          <v-card-text v-ellipsis="ellipsis" :style="{height:height}" class="align-start pb-0 text-caption text-sm-body-2 text-md-body-1 text-lg-body-1 overflow-hidden">
               {{ description }}
           </v-card-text>
           <v-card-actions class="mt-auto d-flex px-4 justify-end">
@@ -83,6 +82,39 @@ export default {
   computed:{
     random(){
       return this._.random(2)
+    },
+    //xs : 318
+    //sm : 366
+    //md : 630
+    //xl : 936
+    textWidth(){
+      switch (this.$vuetify.breakpoint.name) {
+        case "xs": return "318px"
+        case "sm": return "366px"
+        case "md": return "630px"
+        case "lg": return "936px"
+        default: return "936px"
+
+      }
+    },
+    ellipsis(){
+      switch (this.$vuetify.breakpoint.name) {
+        case "xs": return 3
+        case "sm": return 4
+        case "md": return 3
+        case "lg": return 4
+        case "xl": return 4
+        default: return 3
+
+      }
+    },
+    height(){
+      switch (this.$vuetify.breakpoint.name) {
+        case "xs": return "60px"
+        case "sm": return "100px"
+        case "md": return "100px"
+        default: return "100px"
+      }
     }
   },
   mounted() {

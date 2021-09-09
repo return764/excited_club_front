@@ -44,9 +44,6 @@ export default {
       toPage: 1
     }
   },
-  //todo 添加是否显示右侧跳转的flag
-  //todo 添加点击go的事件
-  //todo 测试移动端兼容性
   methods:{
     handlePaginationChange(page){
       this.$emit("change",page)

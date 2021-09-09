@@ -1,7 +1,7 @@
 <template>
   <v-container>
-    <v-row justify="center">
-      <v-col lg="8">
+    <v-row class="mx-auto" :style="{width:width}" justify="center">
+      <v-col>
         <transition-group
             v-on:before-enter="beforeEnter"
             v-on:enter="enter"
@@ -19,7 +19,6 @@
             />
           </v-row>
         </transition-group>
-
         <div class="text-center">
           <i-pagination
               v-model="pagination.page"
@@ -38,9 +37,11 @@ import INewsCard from "@/components/iNewsCard";
 import IPagination from "@/components/common/IPagination";
 import articlesApi from "@/services/articles";
 import Velocity from 'velocity-animate';
+import mixins from "@/mixins"
 
 export default {
   name: "NewsInform",
+  mixins:[mixins],
   components:{
     INewsCard,IPagination
   },
@@ -105,7 +106,7 @@ export default {
           { complete: done }
         )
     }
-  }
+  },
 }
 </script>
 

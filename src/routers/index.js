@@ -92,7 +92,7 @@ export const routes = [
                         component: ArticlePage,
                         meta:{
                             name: "文章",
-                            invisible:false,
+                            invisible:true,
                         }
                     }
                 ]
@@ -137,7 +137,6 @@ export const routes = [
         ]
     },
 ]
-
 export default new VueRouter({
     mode: 'history',
     routes: routes

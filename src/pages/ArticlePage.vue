@@ -28,9 +28,11 @@
 
 <script>
 import articlesApi from "@/services/articles";
+import mixins from "@/mixins"
 
 export default {
   name: "ArticlePage",
+  mixins:[mixins],
   data(){
     return{
       article:{}
@@ -93,17 +95,6 @@ export default {
     }
   },
   computed:{
-    width(){
-      switch (this.$vuetify.breakpoint.name) {
-        case 'xs': return '90vw'
-        case 'sm': return '75vw'
-        case 'md': return '80vw'
-        case 'lg': return '65vw'
-        case 'xl': return '60vw'
-      }
-
-      return '90vw';
-    },
     isLatest(){
       return this.$route.path.endsWith("latest")
     }

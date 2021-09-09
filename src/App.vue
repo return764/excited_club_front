@@ -18,18 +18,16 @@
         />
       </div>
       <v-spacer/>
-      <v-tabs
-          right
-          center-active
-          show-arrows
+<!--      <tab-menu/>-->
+      <i-tabs/>
+      <v-btn text
+             v-if="!isAuth"
+             @click.stop="loginDialog = true"
+             color="primary">登录/注册</v-btn>
+      <avatar-menu v-else
+        :user="user"
       >
-        <v-tab v-for="(route,i) in tabRoutes"
-               :key="i"
-               :to="route.path"
-        >{{ route.meta.name }}
-        </v-tab>
-      </v-tabs>
-
+      </avatar-menu>
     </v-app-bar>
     <v-main app class="grey lighten-5 background pa-0 pb-5">
       <router-view/>
@@ -40,29 +38,39 @@
         <p>蜀ICP备20014393号-1</p>
       </v-container>
     </v-footer>
+    <login-form v-model="loginDialog" @submit="handleLogin" @toRegister="registerDialog = true"/>
+    <register-form v-model="registerDialog" @submit="handleLogin"/>
   </v-app>
 </template>
 
 <script>
 import {mapGetters} from "vuex";
+import LoginForm from "@/components/LoginForm";
+import RegisterForm from "@/components/RegisterForm";
+import AvatarMenu from "@/components/AvatarMenu";
+import ITabs from "@/components/ITabs";
 
 export default {
   name: 'App',
-  components: {},
+  components: {ITabs, AvatarMenu, RegisterForm, LoginForm},
   data: () => ({
     isScrolling: false,
+    loginDialog: false,
+    registerDialog: false
   }),
   methods: {
     onScroll() {
       this.isScrolling = (window.pageYOffset ||
           document.documentElement.scrollTop || 0) > 20
+    },
+    handleLogin(){
+      this.registerDialog = false
+      this.loginDialog = false
     }
   },
   computed: {
-    ...mapGetters("route", [
-      "routes",
-      "tabRoutes"
-    ])
+
+    ...mapGetters("account",["isAuth","user"])
   }
 };
 </script>

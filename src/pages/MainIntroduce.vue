@@ -1,11 +1,10 @@
-<template>
+<template >
   <v-container>
-    <v-row justify="center">
+    <v-row justify="center" :style="{width: width}" class="mx-auto">
       <v-sheet
           rounded
           elevation="2"
           height="90vh"
-          :width="width"
       >
         <v-col>
           <v-row class="mb-4 my-4" justify="center">
@@ -27,29 +26,18 @@
 </template>
 
 <script>
+import mixins from "@/mixins";
+
 export default {
   name: "MainIntroduce",
+  mixins:[mixins],
   data(){
     return{
 
     }
   },
-  computed:{
-    width(){
-      switch (this.$vuetify.breakpoint.name) {
-        case 'xs': return '90vw'
-        case 'sm': return '75vw'
-        case 'md': return '80vw'
-        case 'lg': return '65vw'
-        case 'xl': return '60vw'
-      }
-
-      return '90vw';
-    }
-  }
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
 </style>

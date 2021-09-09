@@ -17,8 +17,8 @@
           dense
       >
         <v-col>
-          <v-row :style="{width:rowWidth}" class="mb-3 mx-auto" justify="center">
-            <v-col cols="12" sm="6">
+          <v-row :style="{width:width}" class="mb-3 mx-auto" justify="center">
+            <v-col cols="12" md="6">
               <v-card
                   elevation="2"
                   min-height="268"
@@ -41,7 +41,7 @@
                 <i-list :items="newsItems"/>
               </v-card>
             </v-col>
-            <v-col cols="12" sm="6">
+            <v-col cols="12" md="6">
               <v-card
                   elevation="2"
                   min-height="268"
@@ -64,7 +64,6 @@
               </v-card>
             </v-col>
           </v-row>
-          <!-- todo 构建自定义multipart 轮播组件 基于v-window或者 v-item-group -->
         </v-col>
       </v-row>
     </v-container>
@@ -76,9 +75,11 @@ import ICarousel from "@/components/index/ICarousel";
 import IList from "@/components/common/IList";
 import pictureApi from "@/services/pictures";
 import articlesApi from "@/services/articles";
+import mixins from "@/mixins";
 
 export default {
   name: "Index",
+  mixins:[mixins],
   components: {
     ICarousel,
     IList,
@@ -103,7 +104,6 @@ export default {
         if (data){
           this.pictures = data.content
         }
-        //todo 处理异常
       })
     },
     handleListInfo(){
@@ -133,22 +133,12 @@ export default {
         default:return '70vh'
       }
     },
-    rowWidth(){
-      switch (this.$vuetify.breakpoint.name){
-        case "xs":return '100%'
-        case "sm":return '90%'
-        case "md":return '78%'
-        case "lg":return '80%'
-        case "xl":return '68%'
-        default:return '70%'
-      }
-    }
   }
 }
 </script>
 
-<style lang="scss">
-.v-card__title {
+<style scoped lang="scss">
+::v-deep .v-card__title {
   padding: 8px 16px !important;
 }
 </style>

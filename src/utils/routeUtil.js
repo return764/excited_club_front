@@ -50,7 +50,7 @@ const getBaseChildrenRoute = (routes) => {
         if (i?.meta?.parent === matchedParent[0]?.meta?.parent){
             const ls = []
             i.children?.forEach(({name,path,meta})=>{
-                if (meta.invisible !== false){
+                if (meta.invisible !== true){
                     ls.push({name,path})
                 }
             })
@@ -60,6 +60,20 @@ const getBaseChildrenRoute = (routes) => {
     return []
 }
 
+/**
+ * 获取全路径
+ * @param routes
+ * @param parentPath
+ */
+function formatFullPath(routes, parentPath = ''){
+    routes.forEach(route=>{
+        let isFullPath = route.path.substring(0,1) === '/'
+        route.fullPath = isFullPath ? route.path : (parentPath === '/' ? parentPath + route.path : parentPath + '/' + route.path)
+        if (route.children){
+            formatFullPath(route.children,route.fullPath)
+        }
+    })
+}
 
 
-export {getBreadcrumbs,getBaseChildrenRoute,setAppOptions}
+export {getBreadcrumbs,getBaseChildrenRoute,setAppOptions,formatFullPath}

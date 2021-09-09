@@ -15,8 +15,7 @@ Vue.use(Message)
 Vue.directive(ellipsisDirective.name, ellipsisDirective)
 Vue.config.productionTip = false
 Vue.prototype._ = _
-
-bootstrap({router, store})
+bootstrap({router, store, message:Vue.prototype.$message})
 
 new Vue({
   vuetify,
