@@ -17,9 +17,10 @@
             v-show="$vuetify.breakpoint.smAndUp"
         />
       </div>
-      <v-spacer/>
+      <v-spacer v-show="$vuetify.breakpoint.smAndUp"/>
 <!--      <tab-menu/>-->
       <i-tabs/>
+      <v-spacer v-show="!$vuetify.breakpoint.smAndUp"/>
       <v-btn text
              v-if="!isAuth"
              @click.stop="loginDialog = true"
@@ -38,8 +39,8 @@
         <p>蜀ICP备20014393号-1</p>
       </v-container>
     </v-footer>
-    <login-form v-model="loginDialog" @submit="handleLogin" @toRegister="registerDialog = true"/>
-    <register-form v-model="registerDialog" @submit="handleLogin"/>
+    <login-form v-if="isAuth" v-model="loginDialog" @submit="handleLogin" @toRegister="registerDialog = true"/>
+    <register-form v-if="isAuth" v-model="registerDialog" @submit="handleLogin"/>
   </v-app>
 </template>
 
@@ -69,8 +70,8 @@ export default {
     }
   },
   computed: {
+    ...mapGetters("account",["isAuth","user"]),
 
-    ...mapGetters("account",["isAuth","user"])
   }
 };
 </script>
