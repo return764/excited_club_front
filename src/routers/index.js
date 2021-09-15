@@ -105,7 +105,6 @@ export const routes = [
                     name: "杰出展示",
                     parent: "outstanding"
                 },
-
             },
             {
                 path: "/photos",
@@ -133,7 +132,16 @@ export const routes = [
                         },
                     }
                 ]
-            }
+            },
+            {
+                path: "/userInfo",
+                component: BlankLayout,
+                name: "个人信息",
+                meta: {
+                    name: "个人信息",
+                    parent: "userInfo"
+                },
+            },
         ]
     },
 ]
