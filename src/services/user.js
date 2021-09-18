@@ -1,19 +1,27 @@
-import {USERS} from "@/services/api"
+import {ACCOUNT, USERS} from "@/services/api"
 import {request,METHOD} from "@/utils/request";
 
 const usersApi = {}
 
 usersApi.register = (data)=>{
     return request({
-        url: `${USERS}/register`,
+        url: `${ACCOUNT}/register`,
         method: METHOD.POST,
+        data:data
+    })
+}
+
+usersApi.update = (data) => {
+    return request({
+        url: `${USERS}/${data.id}`,
+        method: METHOD.PUT,
         data:data
     })
 }
 
 usersApi.getCAPTCH = (email)=>{
     return request({
-        url: `${USERS}/verifyCode`,
+        url: `${ACCOUNT}/verifyCode`,
         method: METHOD.POST,
         params: {
             email: email
@@ -23,7 +31,7 @@ usersApi.getCAPTCH = (email)=>{
 
 usersApi.loginVerify = (email,verifyCode)=>{
     return request({
-        url: `${USERS}/login/verify`,
+        url: `${ACCOUNT}/login/verify`,
         method: METHOD.POST,
         params:{
             email: email,
@@ -34,7 +42,7 @@ usersApi.loginVerify = (email,verifyCode)=>{
 
 usersApi.loginEmail = (email,password)=>{
     return request({
-        url: `${USERS}/login/email`,
+        url: `${ACCOUNT}/login/email`,
         method:METHOD.POST,
         data:{
             username:email,

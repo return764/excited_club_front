@@ -35,12 +35,14 @@
             <v-divider class="my-3"></v-divider>
             <v-btn
                 text
+                to="/user"
             >
-              修改信息
+              个人中心
             </v-btn>
             <v-divider class="my-3"></v-divider>
             <v-btn
                 text
+                @click="logout"
             >
               登出
             </v-btn>
@@ -52,9 +54,17 @@
 </template>
 
 <script>
+import {mapMutations} from "vuex"
 export default {
   name: "AvatarMenu",
-  props:["user"]
+  props:["user"],
+  methods:{
+    ...mapMutations("account",["removeAccount"]),
+    logout(){
+      this.removeAccount()
+      this.$message.success("登出成功")
+    }
+  }
 }
 </script>
 

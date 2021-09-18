@@ -21,7 +21,7 @@ export default {
             const indexRoute = _.find(state.routes,(o)=>{
                 return o.path === '/index'
             })
-            let routes = [indexRoute,...rootRoute.children]
+            let routes = [indexRoute,...rootRoute.children.filter(o=>!o.meta.invisible)]
             formatFullPath(routes)
             return routes
         }

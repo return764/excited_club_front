@@ -1,3 +1,4 @@
+import {removeAuthorization} from "@/utils/request"
 
 export default {
   namespaced:true,
@@ -8,6 +9,11 @@ export default {
     setUser(state, user){
       state.user = user
       localStorage.setItem("user",JSON.stringify(user))
+    },
+    removeAccount(state){
+      state.user = null
+      localStorage.removeItem("user")
+      removeAuthorization()
     }
   },
   getters: {

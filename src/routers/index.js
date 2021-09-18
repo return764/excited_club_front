@@ -9,6 +9,8 @@ import MainIntroduce from "@/pages/MainIntroduce";
 import PhotosTeacher from "@/pages/PhotosTeacher";
 import OtherIntroduce from "@/pages/OtherIntroduce";
 import IWaterfallList from "@/pages/IWaterfallList";
+import UserInfoPage from "@/pages/UserInfoPage";
+import NotFound from "@/components/NotFound";
 
 const originalPush = VueRouter.prototype.push;
 VueRouter.prototype.push = function push(location) {
@@ -134,16 +136,31 @@ export const routes = [
                 ]
             },
             {
-                path: "/userInfo",
+                path: "/user",
                 component: BlankLayout,
-                name: "个人信息",
+                redirect: "/user/info",
                 meta: {
-                    name: "个人信息",
-                    parent: "userInfo"
+                    name: "个人中心",
+                    invisible:true,
                 },
+                children: [
+                    {
+                        path: "info",
+                        component: UserInfoPage,
+                        name: "个人中心",
+                        meta: {
+                            name: "个人中心",
+                        },
+                    }
+                ]
             },
         ]
     },
+    {
+        path: '*',
+        name: 'NotFound',
+        component: NotFound
+    }
 ]
 export default new VueRouter({
     mode: 'history',
