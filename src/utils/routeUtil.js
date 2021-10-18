@@ -1,4 +1,5 @@
 import _ from "lodash"
+import deepmerge from "deepmerge";
 
 //应用配置
 let appOptions = {
@@ -16,6 +17,44 @@ function setAppOptions(options) {
     appOptions.store = store
 }
 
+/**
+ * 深度合并路由
+ * @param target {Route[]}
+ * @param source {Route[]}
+ * @returns {Route[]}
+ */
+function deepMergeRoutes(target, source) {
+    // 映射路由数组
+    const mapRoutes = routes => {
+        const routesMap = {}
+        routes.forEach(item => {
+            routesMap[item.path] = {
+                ...item,
+                children: item.children ? mapRoutes(item.children) : undefined
+            }
+        })
+        return routesMap
+    }
+    const tarMap = mapRoutes(target)
+    const srcMap = mapRoutes(source)
+
+    // 合并路由
+    const merge = deepmerge(tarMap, srcMap)
+
+    // 转换为 routes 数组
+    const parseRoutesMap = routesMap => {
+        return Object.values(routesMap).map(item => {
+            if (item.children) {
+                item.children = parseRoutesMap(item.children)
+            } else {
+                delete item.children
+            }
+            return item
+        })
+    }
+    return parseRoutesMap(merge)
+}
+
 
 const getBreadcrumbs = (routes) => {
     let breadcrumbs = [
@@ -25,7 +64,9 @@ const getBreadcrumbs = (routes) => {
         //     to: "/index"
         // }
     ]
-    const {matched} = routes
+    let {matched} = routes
+    console.log(matched)
+    matched = filterInBreadcrumb(matched)
     matched.forEach(item => {
         const it = {
             text: item.meta.name,
@@ -79,5 +120,25 @@ function formatFullPath(routes, parentPath = ''){
     })
 }
 
+// 过滤invisible
+function filterInvisible(routes){
+    routes = routes.filter(route=>!route.meta.invisible)
+    routes = routes.map(route=>{
+        if (route.children){
+            route.children = filterInvisible(route.children)
+            if (_.isEmpty(route.children)){
+                route.children = null
+            }
+        }
+        return route
+    })
+    return routes
+}
 
-export {getBreadcrumbs,getBaseChildrenRoute,setAppOptions,formatFullPath}
+// 过滤inBreadcrumb
+function filterInBreadcrumb(matchedRoutes){
+    return matchedRoutes.filter(route => !route.meta.inBreadcrumb)
+}
+
+
+export {getBreadcrumbs, deepMergeRoutes, getBaseChildrenRoute,setAppOptions,formatFullPath,filterInvisible}
