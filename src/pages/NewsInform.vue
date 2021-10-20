@@ -69,14 +69,14 @@ export default {
   methods:{
     handleListArticle(){
       this.queryParams.size = this.pagination.size
-      this.queryParams.page = this.pagination.page - 1
+      this.queryParams.page = this.pagination.page
       console.log(this.queryParams)
       articlesApi.list(this.queryParams).then(({data})=>{
         console.log(data)
-        const {content,totalElements,totalPages} = data
-        this.list = content
-        this.pagination.total = totalElements
-        this.pagination.totalPages = totalPages
+        const {records,total,pages} = data
+        this.list = records
+        this.pagination.total = total
+        this.pagination.totalPages = pages
       }).catch(err=>{
         console.error(err)
       })

@@ -62,6 +62,7 @@ export default {
     ...mapMutations("account",["removeAccount"]),
     logout(){
       this.removeAccount()
+      this.$router.push("/")
       this.$message.success("登出成功")
     }
   }

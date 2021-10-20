@@ -8,7 +8,7 @@ picturesApi.list = (params)=>{
     return request({
         url: PICTURES,
         method: METHOD.GET,
-        params:params
+        params: params
     })
 }
 

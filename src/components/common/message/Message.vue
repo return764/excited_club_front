@@ -19,7 +19,7 @@
 let mid = 0
 let defaultOption = {
   visible:true,
-  timeout:10000
+  timeout:3000
 }
 export default {
   name: "Message",

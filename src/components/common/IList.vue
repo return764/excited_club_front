@@ -9,6 +9,9 @@
                  :href="item.to"
     >
       <v-list-item-title>
+        <div class="list-tags">
+          <v-chip small label v-for="tag in item.tags" :key="tag.name" :color="tag.color">{{tag.name}}</v-chip>
+        </div>
         {{item.title}}
       </v-list-item-title>
       <v-list-item-subtitle class="text-right">
@@ -24,13 +27,25 @@ export default {
   props:{
     items:{
       type: Array,
-      default:()=>[{
-        id:1,
-        title: "title",
-        date: "2018-10-20",
-        to: "#"
-      }]
-    }
+      default:()=>{
+        const df = []
+        for (let i = 0; i < 10; i++){
+          df.push({
+            id: i,
+            title: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis, repudiandae.",
+            date: "2018-10-20",
+            to: "#",
+            tags:[
+              {
+                name:"置顶",
+                color: "#C3D6E8"
+              }
+            ]
+          })
+        }
+        return df
+      }
+    },
   }
 }
 </script>
@@ -42,5 +57,8 @@ export default {
 
 ::v-deep .v-list-item__subtitle{
   flex: 1;
+}
+.list-tags{
+  display: inline-block;
 }
 </style>

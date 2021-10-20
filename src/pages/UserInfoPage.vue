@@ -13,7 +13,7 @@
               <v-subheader class="user-info-label">姓名:</v-subheader>
             </v-col>
             <v-col cols="6">
-              <v-text-field solo disabled label="姓名" v-model="params.name"/>
+              <v-text-field solo label="姓名" v-model="params.name"/>
             </v-col>
           </v-row>
           <v-row justify="center">

@@ -50,17 +50,18 @@
               >
                 <v-card-title class="d-flex justify-space-between">
               <span>
-                最新消息
+                阅读推荐
               </span>
                   <v-btn
                       text
                       color="primary accent-4"
+                      to="/news/inform"
                   >
                     更多>
                   </v-btn>
                 </v-card-title>
                 <v-divider/>
-                <i-list/>
+                <i-list :items="hotNewsItems"/>
               </v-card>
             </v-col>
           </v-row>
@@ -88,12 +89,14 @@ export default {
     return {
       show: false,
       pictures:[],
-      newsItems:[]
+      newsItems:[],
+      hotNewsItems:[]
     }
   },
   mounted() {
     this.handleListCarousel()
     this.handleListInfo()
+    this.handleListHotNews()
   },
   methods: {
     handleListCarousel(){
@@ -102,7 +105,7 @@ export default {
       }).then(({data}) =>{
         console.log(data)
         if (data){
-          this.pictures = data.content
+          this.pictures = data.records
         }
       })
     },
@@ -111,6 +114,21 @@ export default {
         //筛选data 将所需部分href构建出来
         for(const i of resp.data){
           this.newsItems.push({
+            id: i.id,
+            title: i.title,
+            date: i.createdAt,
+            to: "/news/"+i.id
+          })
+        }
+      }).catch(err=>{
+        console.error(err)
+      })
+    },
+    handleListHotNews(){
+      articlesApi.hot(5).then(resp=>{
+        //筛选data 将所需部分href构建出来
+        for(const i of resp.data){
+          this.hotNewsItems.push({
             id: i.id,
             title: i.title,
             date: i.createdAt,

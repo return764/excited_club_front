@@ -20,6 +20,7 @@
         :fixed-tabs="true"
         :centered="true"
         class="mb-4"
+        v-if="tabs.length > 0"
     >
       <v-tab v-for="(it,i) in tabs" :to="it.path" :key="i">{{ it.name }}</v-tab>
     </v-tabs>
