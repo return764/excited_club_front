@@ -1,10 +1,12 @@
 import _ from "lodash"
 import deepmerge from "deepmerge";
+import boardsApi from "@/services/boards";
+import VueRouter from "vue-router"
 
 //应用配置
 let appOptions = {
-    router: undefined,
-    store: undefined
+  router: undefined,
+  store: undefined
 }
 
 /**
@@ -12,9 +14,47 @@ let appOptions = {
  * @param options
  */
 function setAppOptions(options) {
-    const {router, store} = options
-    appOptions.router = router
-    appOptions.store = store
+  const {router, store} = options
+  appOptions.router = router
+  appOptions.store = store
+}
+
+async function loadRoutes(){
+  const {router, store} = appOptions
+  let {routes} = router.options
+  let {data} = await boardsApi.listRoute()
+  if (data){
+    data = parseRoutes([data])
+    const finalRoutes = deepMergeRoutes(routes,data)
+    formatRoute(finalRoutes)
+    router.options = {...routes.options, routes: finalRoutes}
+    router.matcher = new VueRouter({...router.options, routes: []}).matcher
+    router.addRoutes(finalRoutes)
+
+    store.commit("route/setRoutes", finalRoutes)
+  }
+
+}
+
+function parseRoutes(routes){
+  routes.forEach(route => {
+    if (route.component){
+      route.component = require(`@/components${route.component}`).default
+    }
+    if (route.children){
+      route.children = parseRoutes(route.children)
+    }
+  })
+  return routes
+}
+
+function formatRoute(routes){
+  routes.forEach(route => {
+    const {path} = route
+    if (!path.startsWith("/") && path !=="*" ) {
+      route.path = "/" + path
+    }
+  })
 }
 
 /**
@@ -24,85 +64,84 @@ function setAppOptions(options) {
  * @returns {Route[]}
  */
 function deepMergeRoutes(target, source) {
-    // 映射路由数组
-    const mapRoutes = routes => {
-        const routesMap = {}
-        routes.forEach(item => {
-            routesMap[item.path] = {
-                ...item,
-                children: item.children ? mapRoutes(item.children) : undefined
-            }
-        })
-        return routesMap
-    }
-    const tarMap = mapRoutes(target)
-    const srcMap = mapRoutes(source)
+  // 映射路由数组
+  const mapRoutes = routes => {
+    const routesMap = {}
+    routes.forEach(item => {
+      routesMap[item.path] = {
+        ...item,
+        children: item.children ? mapRoutes(item.children) : undefined
+      }
+    })
+    return routesMap
+  }
+  const tarMap = mapRoutes(target)
+  const srcMap = mapRoutes(source)
 
-    // 合并路由
-    const merge = deepmerge(tarMap, srcMap)
+  // 合并路由
+  const merge = deepmerge(tarMap, srcMap)
 
-    // 转换为 routes 数组
-    const parseRoutesMap = routesMap => {
-        return Object.values(routesMap).map(item => {
-            if (item.children) {
-                item.children = parseRoutesMap(item.children)
-            } else {
-                delete item.children
-            }
-            return item
-        })
-    }
-    return parseRoutesMap(merge)
+  // 转换为 routes 数组
+  const parseRoutesMap = routesMap => {
+    return Object.values(routesMap).map(item => {
+      if (item.children) {
+        item.children = parseRoutesMap(item.children)
+      } else {
+        delete item.children
+      }
+      return item
+    })
+  }
+  return parseRoutesMap(merge)
 }
 
 
 const getBreadcrumbs = (routes) => {
-    let breadcrumbs = [
-        // {
-        //     text: "主页",
-        //     disabled : false,
-        //     to: "/index"
-        // }
-    ]
-    let {matched} = routes
-    console.log(matched)
-    matched = filterInBreadcrumb(matched)
-    matched.forEach(item => {
-        const it = {
-            text: item.meta.name,
-            disabled : false,
-            exact: true,
-            to: item.path
-        }
-        breadcrumbs.push(it)
-    })
-    breadcrumbs[0].to = breadcrumbs[0].text === "主页" ? "/index" : breadcrumbs[0].to
-    breadcrumbs[breadcrumbs.length - 1].disabled = true
-    return breadcrumbs
+  let breadcrumbs = [
+    // {
+    //     text: "主页",
+    //     disabled : false,
+    //     to: "/index"
+    // }
+  ]
+  let {matched} = routes
+  matched = filterInBreadcrumb(matched)
+  matched.forEach(item => {
+    const it = {
+      text: item.meta.name,
+      disabled : false,
+      exact: true,
+      to: item.path
+    }
+    breadcrumbs.push(it)
+  })
+  breadcrumbs[0].to = breadcrumbs[0].text === "主页" ? "/index" : breadcrumbs[0].to
+  breadcrumbs[breadcrumbs.length - 1].disabled = true
+  return breadcrumbs
 }
 
 const getBaseChildrenRoute = (routes) => {
-    const {router} = appOptions
-    const {matched} = routes
+  const {router} = appOptions
+  const {matched} = routes
 
-    //匹配的parent
-    const matchedParent = _.filter(matched,(o)=>o.meta.parent !== undefined)
-    // 找到index下的children
-    const {children} = _.find(router.options.routes,(o)=>{
-        return o.path === '/'
-    })
-    for (const i of children) {
-        if (i?.meta?.parent === matchedParent[0]?.meta?.parent){
-            const ls = []
-            i.children?.forEach(({name,path,meta})=>{
-                if (meta.invisible !== true){
-                    ls.push({name,path})
-                }
-            })
-            return ls
+  //匹配的parent
+  const matchedParent = _.filter(matched,(o)=>o.meta.parent !== undefined)
+  // 找到index下的children
+  const {children} = _.find(router.options.routes,(o)=>{
+    return o.path === '/'
+  })
+  for (const i of children) {
+    if (i?.meta?.parent === matchedParent[0]?.meta?.parent){
+      const ls = []
+      i.children?.forEach(({name,path,meta})=>{
+        if (meta.invisible !== true){
+          ls.push({name,path})
         }
+      })
+      return ls
     }
-    return []
+  }
+  return []
 }
 
 /**
@@ -111,34 +150,34 @@ const getBaseChildrenRoute = (routes) => {
  * @param parentPath
  */
 function formatFullPath(routes, parentPath = ''){
-    routes.forEach(route=>{
-        let isFullPath = route.path.substring(0,1) === '/'
-        route.fullPath = isFullPath ? route.path : (parentPath === '/' ? parentPath + route.path : parentPath + '/' + route.path)
-        if (route.children){
-            formatFullPath(route.children,route.fullPath)
-        }
-    })
+  routes.forEach(route=>{
+    let isFullPath = route.path.substring(0,1) === '/'
+    route.fullPath = isFullPath ? route.path : (parentPath === '/' ? parentPath + route.path : parentPath + '/' + route.path)
+    if (route.children){
+      formatFullPath(route.children,route.fullPath)
+    }
+  })
 }
 
 // 过滤invisible
 function filterInvisible(routes){
-    routes = routes.filter(route=>!route.meta.invisible)
-    routes = routes.map(route=>{
-        if (route.children){
-            route.children = filterInvisible(route.children)
-            if (_.isEmpty(route.children)){
-                route.children = null
-            }
-        }
-        return route
-    })
-    return routes
+  routes = routes.filter(route=>!route.meta.invisible)
+  routes = routes.map(route=>{
+    if (route.children){
+      route.children = filterInvisible(route.children)
+      if (_.isEmpty(route.children)){
+        route.children = null
+      }
+    }
+    return route
+  })
+  return routes
 }
 
 // 过滤inBreadcrumb
 function filterInBreadcrumb(matchedRoutes){
-    return matchedRoutes.filter(route => !route.meta.inBreadcrumb)
+  return matchedRoutes.filter(route => !route.meta.inBreadcrumb)
 }
 
 
-export {getBreadcrumbs, deepMergeRoutes, getBaseChildrenRoute,setAppOptions,formatFullPath,filterInvisible}
+export {getBreadcrumbs, deepMergeRoutes, getBaseChildrenRoute, setAppOptions, loadRoutes, formatFullPath,filterInvisible}

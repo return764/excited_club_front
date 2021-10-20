@@ -21,7 +21,7 @@ export default {
       if (!state.user){
         try {
           const user = localStorage.getItem("user")
-          state.user = JSON.parse(user)
+          return JSON.parse(user)
         }catch (e) {
           console.error(e)
         }

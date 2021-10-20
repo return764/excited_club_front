@@ -1,29 +1,35 @@
-import {routes} from "@/routers";
 import _ from "lodash"
-import {formatFullPath} from "@/utils/routeUtil";
+import {filterInvisible, formatFullPath} from "@/utils/routeUtil";
+
 
 export default {
-    namespaced:true,
-    state:()=>({
-        routes:routes
-    }),
-    mutations:{
-
-    },
-    getters:{
-        routes(state){
-            return state.routes
-        },
-        tabRoutes(state){
-            const rootRoute = _.find(state.routes,(o)=>{
-                return o.path === '/'
-            })
-            const indexRoute = _.find(state.routes,(o)=>{
-                return o.path === '/index'
-            })
-            let routes = [indexRoute,...rootRoute.children.filter(o=>!o.meta.invisible)]
-            formatFullPath(routes)
-            return routes
-        }
+  namespaced:true,
+  state:{
+    routes: _.cloneDeep(require("@/routers/config").default.routes)
+  },
+  mutations:{
+    setRoutes(state, routes){
+      state.routes = routes
     }
+  },
+  getters:{
+    routes(state){
+      return state.routes
+    },
+    tabRoutes(state){
+      const rts = _.cloneDeep(state.routes)
+      const rootRoute = _.find(rts,(o)=>{
+        return o.path === '/'
+      })
+      const indexRoute = _.find(rts,(o)=>{
+        return o.path === '/index'
+      })
+      let routes = [indexRoute,...rootRoute.children]
+      formatFullPath(routes)
+      routes = filterInvisible(routes)
+      return routes
+    }
+  }
 }
+
+

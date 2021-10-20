@@ -4,4 +4,5 @@ module.exports = {
     PICTURES: `/api/content/pictures`,
     ACCOUNT: `/api/users`,
     USERS: `api/content/users`,
+    BOARDS: `api/content/boards`
 }

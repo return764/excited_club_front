@@ -1,4 +1,4 @@
-import {setAppOptions} from "@/utils/routeUtil";
+import {loadRoutes, setAppOptions} from "@/utils/routeUtil";
 import {loadInterceptors} from "@/utils/request";
 import interceptors from "@/utils/interceptors";
 
@@ -8,6 +8,7 @@ function bootstrap({router, store, message}) {
 
     loadInterceptors(interceptors,{message})
 
+    loadRoutes()
 }
 
 

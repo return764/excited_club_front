@@ -10,4 +10,5 @@ export default new Vuex.Store({
         route: route,
         account: account
     },
+    strict: process.env.NODE_ENV !== 'production'
 })

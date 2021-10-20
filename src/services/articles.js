@@ -32,5 +32,12 @@ articlesApi.top = num =>{
     })
 }
 
+articlesApi.hot = num => {
+    return request({
+        url: `${ARTICLES}/hot/${num}`,
+        method:METHOD.GET
+    })
+}
+
 
 export default articlesApi
