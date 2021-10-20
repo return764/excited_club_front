@@ -58,6 +58,9 @@ export default {
     loginDialog: false,
     registerDialog: false
   }),
+  created() {
+    this.setTitle()
+  },
   methods: {
     onScroll() {
       this.isScrolling = (window.pageYOffset ||
@@ -66,12 +69,23 @@ export default {
     handleLogin(){
       this.registerDialog = false
       this.loginDialog = false
+    },
+    setTitle(){
+      const route = this.$route
+      const key = route.path === '/index' || route.path === '/' ? '首页' : route.matched[route.matched.length - 1].name
+      // todo k
+      document.title = process.env.VUE_APP_NAME + ' | ' + key
     }
   },
   computed: {
     ...mapGetters("account",["isAuth","user"]),
 
-  }
+  },
+  watch:{
+    $route(){
+      this.setTitle()
+    }
+  },
 };
 </script>
 
