@@ -13,7 +13,7 @@ Vue.filter('moment', function(dataStr, pattern = 'yyyy-MM-DD HH:mm:ss') {
 
 Vue.filter('urlImage',function (data){
     if (!data){
-        return require('@/assets/image/placeholder.jpg')
+        return require('@/assets/placeholder.jpg')
     }
     if (data.startsWith('http')){
         return data

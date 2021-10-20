@@ -2,22 +2,24 @@
   <v-container class="waterfall-list"
                fluid
   >
-      <waterfall :watch="list" :line-gap="200" line="v" fixed-height align="center">
+      <waterfall :watch="list" :line-gap="lineGap" line="v" align="center">
         <waterfall-slot v-for="(item, index) in list"
                         :width="item.width"
                         :height="item.height"
                         :order="index"
                         move-class="item-move"
-                        :key="item.id">
-            <v-sheet elevation="1" :rounded="true" style="overflow: hidden"
-                     :style="{margin:'0 .2rem .4rem'}"
-            >
-              <v-img
-                  :src="item.src"
-                  contain
-                  :style="{display:`block`}"
-              />
-            </v-sheet>
+                        :key="index">
+            <v-hover v-slot="{hover}">
+              <v-sheet :elevation="hover ? 5 : 1" :rounded="true"
+                       class="waterfall-list-item"
+              >
+                <v-img
+                    :src="`/${item.path}`"
+                    contain
+                    :style="{display:`block`}"
+                />
+              </v-sheet>
+            </v-hover>
         </waterfall-slot>
       </waterfall>
   </v-container>
@@ -28,6 +30,7 @@ import infiniteScroll from "vue-infinite-scroll"
 import Waterfall from 'vue-waterfall/lib/waterfall'
 import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
 import {throttle} from 'lodash'
+import picturesApi from "@/services/pictures";
 
 export default {
   name: "IWaterfallList",
@@ -39,46 +42,19 @@ export default {
   data(){
     return{
       list: [],
-      images:[
-        {
-          src: require("@/assets/image/1.jpg"),
-          height: 412,
-          width: 874
-        },{
-          src: require("@/assets/image/2.jpg"),
-          height: 423,
-          width: 308
-        },{
-          src: require("@/assets/image/3.jpg"),
-          height: 427,
-          width: 688
-        },{
-          src: require("@/assets/image/4.jpg"),
-          height: 437,
-          width: 593
-        },{
-          src: require("@/assets/image/5.jpg"),
-          height: 461,
-          width: 288
-        },{
-          src: require("@/assets/image/6.jpg"),
-          height: 479,
-          width: 570
-        },{
-          src: require("@/assets/image/7.jpg"),
-          height: 484,
-          width: 229
-        },{
-          src: require("@/assets/image/8.jpg"),
-          height: 493,
-          width: 749
-        }
-      ]
+      pagination: {
+        page: 1,
+        size: 10,
+        sort: null,
+        total: 1,
+        current: 1,
+      },
+      queryParams: {
+        size: 10,
+        page: 1,
+        type: "waterfall"
+      }
     }
-  },
-  created() {
-    this.list = this.images.concat(this.images)
-
   },
   mounted() {
     this.$vuetify.goTo(290,{})
@@ -86,37 +62,55 @@ export default {
     this.load()
   },
   computed:{
-    col(){
+    lineGap(){
       switch (this.$vuetify.breakpoint.name) {
         case "xs":
-          return 2
+          return 200
         case "sm":
-          return 3
+          return 300
         case "md":
-          return 4
+          return 300
         case "lg":
-          return 6
+          return 400
         case "xl":
-          return 8
+          return 400
         default:
-          return 8
+          return 400
       }
-    }
+    },
   },
   methods: {
-    loadMore: function (){
-      console.log("加载更多")
-      this.list = this.list.concat(this.images,this.images)
-    },
     load(){
-      this.loadMore()
+      console.log("加载更多")
+      this.queryParams.size = this.pagination.size
+      this.queryParams.page = this.pagination.page
+      picturesApi.list(this.queryParams).then(({data}) =>{
+        if (data){
+          this.pagination.total = data.total
+          this.pagination.current = data.current
+          this.list = this.list.concat(data.records)
+        }
+      })
+
+    },
+    isEnd(){
+      let pages = this.pagination.total / this.pagination.size
+      console.log(pages+"---"+this.pagination.current)
+      return this.pagination.current > pages
     },
     handleScroll: throttle(function (){
       let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
       if (scrollTop+window.innerHeight >= document.documentElement.scrollHeight){
-        this.load()
+        if (this.isEnd()){
+          this.$message.info("已经到底啦~")
+        } else {
+          this.pagination.page = this.pagination.page + 1;
+          this.load()
+        }
+
       }
-    },1000)
+    },1000),
+
   },
   destroyed() {
     window.removeEventListener('scroll', this.handleScroll,true)
@@ -127,12 +121,15 @@ export default {
 <style lang="scss">
 .waterfall-list{
   min-height: 80vh;
-  height: 90vh;
+  .waterfall-list-item{
+    margin: .2rem .4rem;
+    overflow: hidden;
+  }
 }
 .item-move{
   transition: transform .5s cubic-bezier(.55,0,.1,1);
 }
 .vue-waterfall-slot{
-  transition: 2s;
+  transition: 1s;
 }
 </style>

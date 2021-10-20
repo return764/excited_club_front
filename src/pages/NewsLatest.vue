@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import departmentApi from "@/services/departments";
+import articlesApi from "@/services/articles";
 
 export default {
   name: "NewsLatest",
@@ -39,7 +39,7 @@ export default {
   },
   methods:{
     latest(){
-      departmentApi.latest().then(({data})=>{
+      articlesApi.latest().then(({data})=>{
           this.article = data
       }).catch((err)=>{
         console.error(err)
