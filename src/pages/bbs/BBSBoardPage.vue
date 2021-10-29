@@ -38,7 +38,7 @@
     </v-row>
     <v-row class="py-1">
       <v-col cols="9" class="pl-0">
-        <v-scale-transition>
+        <v-scale-transition hide-on-leave>
           <router-view/>
         </v-scale-transition>
       </v-col>
