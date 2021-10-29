@@ -3,6 +3,13 @@ import {request, METHOD} from "@/utils/request";
 
 const boardsApi = {}
 
+boardsApi.list = () =>{
+  return request({
+    url: BOARDS,
+    method: METHOD.GET
+  })
+}
+
 boardsApi.listRoute = () =>{
   return request({
     url: `${BOARDS}/route`,

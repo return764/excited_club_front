@@ -5,42 +5,24 @@
         <v-chip-group class="px-2" active-class="primary" color="blue">
           <v-chip
               label
-              to="home"
+              :to="{name:'所有板块',params:{rn:'home'}}"
           >
             所有板块
           </v-chip>
           <v-chip
               label
-              to="TC"
+              v-for="board in boards"
+              :key="board.id"
+              :to="{name:board.name,params:{rn:board.routerName}}"
           >
-            技术方向
-          </v-chip>
-          <v-chip
-              label
-              to="SCM"
-          >
-            供应链方向
-          </v-chip>
-          <v-chip
-              label
-              to="ML"
-          >
-            机器学习方向
-          </v-chip>
-          <v-chip
-              label
-              to="BI"
-          >
-            商务智能方向
+            {{board.name}}
           </v-chip>
         </v-chip-group>
       </v-sheet>
     </v-row>
     <v-row class="py-1">
       <v-col cols="9" class="pl-0">
-        <v-scale-transition hide-on-leave>
-          <router-view/>
-        </v-scale-transition>
+        <router-view/>
       </v-col>
       <v-col cols="3" class="pr-0">
         <v-sheet elevation="2">
@@ -95,11 +77,25 @@
 </template>
 
 <script>
+import boardsApi from "@/services/boards";
+
 export default {
   name: "BBSBoardPage",
   data() {
     return {
+      boards: [],
       selectedItem:null,
+    }
+  },
+  mounted() {
+    this.handleListBoard()
+  },
+  methods:{
+    handleListBoard(){
+      boardsApi.list().then(({data})=>{
+        this.boards = data
+        console.log(data)
+      })
     }
   }
 }

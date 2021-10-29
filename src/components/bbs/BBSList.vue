@@ -1,8 +1,9 @@
 <template>
   <div class="bbs-list">
-    <v-sheet elevation="2">
+      <v-sheet elevation="2" style="position: relative">
       <div class="posts-wrap px-5">
-        <div class="post-item" v-for="item in posts" :key="item.id">
+        <v-scroll-x-transition group hide-on-leave>
+          <div class="post-item" v-for="item in posts" :key="item.id">
           <div class="post-user">
             <v-avatar color="brown">
               <v-img :src="item.issuer.avatar"/>
@@ -13,8 +14,17 @@
             <div class="post-item-desc text--secondary text-body-2">{{item.createdAt | moment}}</div>
           </div>
         </div>
+        </v-scroll-x-transition>
       </div>
+      <v-overlay :absolute="true" :opacity="0.1" :value="loading">
+        <v-progress-circular
+            indeterminate
+            color="primary"
+            size="64"
+        ></v-progress-circular>
+      </v-overlay>
     </v-sheet>
+
     <i-pagination
         v-model="pagination.page"
         @change="handlePaginationChange"
@@ -34,6 +44,7 @@ export default {
     return{
       posts: [],
       loading: false,
+      routeName: 'home',
       pagination:{
         page: 1,
         size: 10,
@@ -44,12 +55,6 @@ export default {
         size: 10,
         page: 0,
       }
-    }
-  },
-  computed:{
-    routeName(){
-      const paths = this.$route.matched[this.$route.matched.length - 1].path.split("/")
-      return paths[paths.length - 1]
     }
   },
   methods:{
@@ -68,7 +73,6 @@ export default {
       })
     },
     handlePaginationChange(page){
-      console.log(page)
       this.pagination.page = page
       this.handleListPosts()
     },
@@ -77,11 +81,11 @@ export default {
     this.handleListPosts()
   },
   watch:{
-    routeName(v){
-      if (v !== this.routeName){
+    "$route.params.rn"(v, ov){
+      if (v !== ov){
+        this.routeName = v
         this.handleListPosts()
       }
-      console.log(v)
     }
   }
 }
