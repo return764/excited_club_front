@@ -2,7 +2,7 @@
   <div>
     <v-row class="pt-3 pb-1">
       <v-sheet elevation="1" min-width="100%">
-        <v-chip-group class="px-2" mandatory active-class="primary" color="blue">
+        <v-chip-group class="px-2" active-class="primary" color="blue">
           <v-chip
               label
               to="home"
@@ -85,6 +85,9 @@
               </v-list-item-group>
             </v-list>
           </div>
+        </v-sheet>
+        <v-sheet elevation="2" class="mt-4 pa-2 text-center">
+          <v-btn color="primary">发布帖子<v-icon>mdi-note-edit-outline</v-icon></v-btn>
         </v-sheet>
       </v-col>
     </v-row>

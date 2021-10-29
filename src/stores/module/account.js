@@ -1,4 +1,5 @@
 import {removeAuthorization} from "@/utils/request"
+import _ from "lodash"
 
 export default {
   namespaced:true,
@@ -26,7 +27,7 @@ export default {
           console.error(e)
         }
       }
-      return state.user
+      return _.cloneDeep(state.user)
     },
     isAuth: state=>{
       if (!state.user){
