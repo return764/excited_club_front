@@ -4,7 +4,7 @@
       <v-col cols="9">
         <v-sheet elevation="2" class="py-2 px-5">
           <div class="d-flex py-5">
-            <div class="title text-h4">帖子测试，Post标题，很长。。。</div>
+            <div class="title text-h4">{{post.name}}</div>
           </div>
           <div class="d-flex justify-space-between">
             <div>
@@ -20,24 +20,22 @@
 
               <span class="stat-item">
                 <v-icon small>
-                  mdi-eye-outline
+                  mdi-thumb-up-outline
                 </v-icon>
-                1234
+                {{post.likeCount}}
               </span>
             </div>
           </div>
           <div class="author-block d-flex">
             <v-avatar class="mx-3 my-2" color="indigo">
-              <v-icon dark>
-                mdi-account-circle
-              </v-icon>
+              <v-img :src="post.issuer.avatar"></v-img>
             </v-avatar>
             <div class="d-flex flex-column justify-center flex-fill">
-              <a>作者</a>
-              <div class="text-body-2 text--secondary">7天前</div>
+              <a>{{post.issuer.name}}</a>
+              <div class="text-body-2 text--secondary">{{post.createdAt | moment}}</div>
             </div>
           </div>
-          <div class="content"></div>
+          <div class="content">{{post.content}}</div>
         </v-sheet>
       </v-col>
       <v-col cols="3"></v-col>
@@ -46,8 +44,33 @@
 </template>
 
 <script>
+import postsApi from "@/services/posts";
+
 export default {
-  name: "PostPage"
+  name: "PostPage",
+  data() {
+    return {
+      loading: false,
+      post: {}
+    }
+  },
+  computed:{
+    postId(){
+      return this.$route.params.post_id
+    }
+  },
+  mounted() {
+    this.handlePost()
+  },
+  methods:{
+    handlePost(){
+      this.loading = true
+      postsApi.get(this.postId).then(({data})=>{
+        this.post = data
+        this.loading = false
+      })
+    }
+  }
 }
 </script>
 

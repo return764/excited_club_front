@@ -13,4 +13,14 @@ postsApi.list = (routerName, params) => {
   })
 }
 
+postsApi.get = (id) => {
+  return request({
+    url: POSTS,
+    method: METHOD.GET,
+    params:{
+      id: id
+    }
+  })
+}
+
 export default postsApi

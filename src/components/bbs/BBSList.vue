@@ -10,7 +10,7 @@
             </v-avatar>
           </div>
           <div class="post-item-content">
-            <div class="post-item-title"><a href="#">{{item.name}}</a></div>
+            <div class="post-item-title"><a :href="`/bbs/p/${item.id}`">{{item.name}}</a></div>
             <div class="post-item-desc text--secondary text-body-2">{{item.createdAt | moment}}</div>
           </div>
         </div>
@@ -44,7 +44,7 @@ export default {
     return{
       posts: [],
       loading: false,
-      routeName: 'home',
+      routerName: 'home',
       pagination:{
         page: 1,
         size: 10,
@@ -62,7 +62,7 @@ export default {
       this.queryParams.size = this.pagination.size
       this.queryParams.page = this.pagination.page
       this.loading = true
-      postsApi.list(this.routeName, this.queryParams).then(({data})=>{
+      postsApi.list(this.routerName, this.queryParams).then(({data})=>{
         if (data){
           const {records,total,pages} = data
           this.posts = records
@@ -78,14 +78,16 @@ export default {
     },
   },
   mounted() {
+    const splitRoute = this.$route.path.split("/")
+    this.routerName = this.$route.params.rn || splitRoute[splitRoute.length - 1]
     this.handleListPosts()
   },
   watch:{
     "$route.params.rn"(v, ov){
-      if (v !== ov){
-        this.routeName = v
-        this.handleListPosts()
-      }
+        if (v !== ov){
+          this.routerName = v
+          this.handleListPosts()
+        }
     }
   }
 }
