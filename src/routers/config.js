@@ -1,31 +1,16 @@
-import Index from "@/pages/Index";
-import MainLayout from "@/layouts/MainLayout";
-import BlankLayout from "@/layouts/BlankLayout";
-import MainIntroduce from "@/pages/MainIntroduce";
-import OtherIntroduce from "@/pages/OtherIntroduce";
-import ArticlePage from "@/pages/ArticlePage";
-import NewsInform from "@/pages/NewsInform";
-import BBSPage from "@/pages/bbs/BBSPage";
-import BBSBoardPage from "@/pages/bbs/BBSBoardPage";
-import PostPage from "@/pages/bbs/PostPage";
-import PhotosTeacher from "@/pages/PhotosTeacher";
-import IWaterfallList from "@/pages/IWaterfallList";
-import UserInfoPage from "@/pages/UserInfoPage";
-import NotFound from "@/components/NotFound";
-import BBSList from "@/components/bbs/BBSList";
 
 const options = {
   mode: 'history',
   routes: [
     {
       path: "/index",
-      component: Index,
+      component: () => import("@/pages/Index"),
       meta: {
         name: "主页"
       },
     }, {
       path: "/",
-      component: MainLayout,
+      component: () => import("@/layouts/MainLayout"),
       redirect: "/index",
       name: "主页",
       meta: {
@@ -40,12 +25,12 @@ const options = {
             parent: "aboutUs",
           },
           redirect:"aboutUs/oc",
-          component: BlankLayout,
+          component: () => import("@/layouts/BlankLayout"),
           children:[
             {
               name:"Oracle Club",
               path:"oc",
-              component:MainIntroduce,
+              component:() => import("@/pages/MainIntroduce"),
               meta: {
                 name: "Oracle Club"
               },
@@ -53,7 +38,7 @@ const options = {
             {
               name:"方向介绍",
               path:"other",
-              component: OtherIntroduce,
+              component: () => import("@/pages/OtherIntroduce"),
               meta: {
                 name: "方向介绍"
               },
@@ -62,7 +47,7 @@ const options = {
         },
         {
           path: "/news",
-          component: BlankLayout,
+          component: () => import("@/layouts/BlankLayout"),
           name: "通知公告",
           meta: {
             name: "通知公告",
@@ -73,7 +58,7 @@ const options = {
             {
               name:"最新消息",
               path:"latest",
-              component:ArticlePage,
+              component: () => import("@/pages/ArticlePage"),
               meta: {
                 name: "最新消息"
               },
@@ -81,7 +66,7 @@ const options = {
             {
               name:"公告",
               path:"inform",
-              component: NewsInform,
+              component: () => import("@/pages/NewsInform"),
               meta: {
                 name: "公告"
               },
@@ -89,7 +74,7 @@ const options = {
             {
               name: "文章",
               path: ":id",
-              component: ArticlePage,
+              component: () => import("@/pages/ArticlePage"),
               meta:{
                 name: "文章",
                 invisible:true,
@@ -99,7 +84,7 @@ const options = {
         },
         {
           path: "/bbs",
-          component: BBSPage,
+          component: () => import("@/pages/bbs/BBSPage"),
           name: "论坛",
           meta: {
             name: "论坛",
@@ -109,7 +94,7 @@ const options = {
           children: [
             {
               path: "b",
-              component: BBSBoardPage,
+              component: () => import("@/pages/bbs/BBSBoardPage"),
               name: "主题",
               meta: {
                 name: "主题",
@@ -120,7 +105,7 @@ const options = {
                 {
                   name:"所有板块",
                   path:"home",
-                  component: BBSList,
+                  component: () => import("@/components/bbs/BBSList"),
                   meta: {
                     name: "所有板块",
                     invisible: true
@@ -130,7 +115,7 @@ const options = {
             },
             {
               path: "p",
-              component: BlankLayout,
+              component: () => import("@/layouts/BlankLayout"),
               name: "帖子s",
               meta: {
                 name: "帖子s",
@@ -141,7 +126,7 @@ const options = {
                 {
                   path: ":post_id",
                   name: "帖子",
-                  component: PostPage,
+                  component: () => import("@/pages/bbs/PostPage"),
                   meta: {
                     name: "帖子",
                     invisible: true
@@ -154,7 +139,7 @@ const options = {
         },
         {
           path: "/photos",
-          component: BlankLayout,
+          component: () => import("@/layouts/BlankLayout"),
           meta: {
             name: "照片墙",
             parent: "photos"
@@ -164,7 +149,7 @@ const options = {
             {
               name:"指导老师",
               path:"teacher",
-              component:PhotosTeacher,
+              component: () => import("@/pages/PhotosTeacher"),
               meta: {
                 name: "指导老师",
                 invisible:true,
@@ -173,7 +158,7 @@ const options = {
             {
               name:"风采展示",
               path:"waterfall",
-              component: IWaterfallList,
+              component: () => import("@/pages/IWaterfallList"),
               meta: {
                 name: "风采展示",
                 invisible:true,
@@ -183,7 +168,7 @@ const options = {
         },
         {
           path: "/user",
-          component: BlankLayout,
+          component:  () => import("@/layouts/BlankLayout"),
           redirect: "/user/info",
           meta: {
             name: "个人中心",
@@ -192,7 +177,7 @@ const options = {
           children: [
             {
               path: "info",
-              component: UserInfoPage,
+              component: () => import("@/pages/UserInfoPage"),
               name: "个人中心",
               meta: {
                 name: "个人中心",
@@ -205,7 +190,7 @@ const options = {
     {
       path: '*',
       name: 'NotFound',
-      component: NotFound
+      component: () => import("@/components/NotFound")
     }
   ]
 }
