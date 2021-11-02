@@ -69,22 +69,26 @@
           </div>
         </v-sheet>
         <v-sheet elevation="2" class="mt-4 pa-2 text-center">
-          <v-btn color="primary">发布帖子<v-icon>mdi-note-edit-outline</v-icon></v-btn>
+          <v-btn color="primary" @click="toggleNewPost = !toggleNewPost">发布帖子<v-icon>mdi-note-edit-outline</v-icon></v-btn>
         </v-sheet>
       </v-col>
     </v-row>
+    <PostNew :show.sync="toggleNewPost"/>
   </div>
 </template>
 
 <script>
 import boardsApi from "@/services/boards";
+import PostNew from "@/pages/bbs/PostNew";
 
 export default {
   name: "BBSBoardPage",
+  components: {PostNew},
   data() {
     return {
       boards: [],
       selectedItem:null,
+      toggleNewPost: false
     }
   },
   mounted() {

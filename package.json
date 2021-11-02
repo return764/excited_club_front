@@ -12,6 +12,7 @@
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "lodash": "^4.17.20",
+    "mavon-editor": "^2.9.1",
     "moment": "^2.29.1",
     "velocity-animate": "^2.0.6",
     "vue": "^2.6.11",
