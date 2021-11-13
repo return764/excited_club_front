@@ -1,38 +1,31 @@
 <template>
-<div class="comment-new">
-  <v-sheet elevation="2" class="py-2 px-5">
-    <div>
-      <div class="comment-head text-h6 mb-2">
-        0条评论
-      </div>
-      <div class="comment-middle d-flex">
-        <v-avatar class="mr-2">
-          <v-img :src="user.avatar"/>
-        </v-avatar>
-        <v-textarea
-            :counter="max"
-            :maxLength="max"
-            ref="tt"
-            outlined
-            :rows="inputRows"
-            @blur="handleBlur"
-            @focus="handleFocus"
-            placeholder="在此处评论..."
-            v-model="comment.content"
-            no-resize
-            dense
-        >
-          <template slot-scope="{props}" slot="counter">
-            {{props.value}}/{{props.max}}字
-          </template>
-        </v-textarea>
-      </div>
-      <div v-show="showAction" class="comment-action text-right">
-        <v-btn small color="primary" @click="handlePublish">回复</v-btn>
-      </div>
+  <div class="comment-new">
+    <div class="comment-middle d-flex">
+      <v-avatar class="mr-2">
+        <v-img :src="user.avatar"/>
+      </v-avatar>
+      <v-textarea
+          :counter="max"
+          :maxLength="max"
+          ref="tt"
+          outlined
+          :rows="inputRows"
+          @blur="handleBlur"
+          @focus="handleFocus"
+          placeholder="在此处评论..."
+          v-model="comment.content"
+          no-resize
+          dense
+      >
+        <template slot-scope="{props}" slot="counter">
+          {{props.value}}/{{props.max}}字
+        </template>
+      </v-textarea>
     </div>
-  </v-sheet>
-</div>
+    <div v-show="showAction" class="comment-action text-right">
+      <v-btn small color="primary" @click="handlePublish">回复</v-btn>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -44,6 +37,10 @@ export default {
   props: {
     postId: {
       type: String
+    },
+    parentId: {
+      type: String,
+      default: null
     }
   },
   data() {
@@ -66,10 +63,13 @@ export default {
     async handlePublish() {
       this.comment.postId = this.postId
       this.comment.issuerId = this.user.id
+      this.comment.parentId = this.parentId
       const {data} = await commentsApi.publish(this.comment)
       if (data && data.result === "ok") {
         this.$message.success("评论成功~")
         this.comment.content = ""
+        this.$emit("after")
+        //TODO 异步刷新组件 并新增分页
       }
     },
     handleBlur(){

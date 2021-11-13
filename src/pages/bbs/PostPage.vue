@@ -37,8 +37,15 @@
           </div>
           <div class="content" ref="content" v-resize="initialImgWidth" v-html="post.content"></div>
         </v-sheet>
+        <div class="pt-5 pb-1">
+          <v-sheet elevation="2" class="py-2 px-5">
+            <div class="comment-head text-h6 mb-2">
+              {{commentCount}}条评论
+            </div>
+            <comment-new :postId="post.id"/>
+          </v-sheet>
+        </div>
 
-        <comment-new :postId="post.id" class="pt-5 pb-1"/>
         <comment :comments="comments"/>
       </v-col>
       <v-col cols="3"></v-col>
@@ -64,7 +71,8 @@ export default {
       post: {
         issuer: {}
       },
-      comments: []
+      comments: [],
+      commentCount: 0,
     }
   },
   computed:{
@@ -75,6 +83,7 @@ export default {
   mounted() {
     this.handlePost()
     this.handleComments()
+    this.handleCountComment()
   },
   updated() {
     this.initialImgWidth()
@@ -93,6 +102,12 @@ export default {
       if (data)
         this.comments = data
       this.loading.comments = false
+    },
+    async handleCountComment() {
+      const {data} = await commentsApi.count(this.postId)
+      if (data) {
+        this.commentCount = data
+      }
     },
     treeToList (tree, parent, result = [], level = 0) {
       tree.forEach(node => {

@@ -6,6 +6,7 @@ import _ from "lodash"
 import store from '@/stores/index'
 import bootstrap from "@/bootstrap"
 import mavonEditor from "mavon-editor"
+import 'moment/locale/zh-cn'
 import '@/utils/filter'
 import {ellipsisDirective} from '@hyjiacan/vue-ellipsis'
 import Message from "@/components/common/message";

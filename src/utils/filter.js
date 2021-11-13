@@ -6,7 +6,9 @@ Vue.filter('moment', function(dataStr, pattern = 'yyyy-MM-DD HH:mm:ss') {
         return
     }
     if (typeof dataStr === "number"){
-        return moment(dataStr).format(pattern)
+        if (moment().diff(moment(dataStr), 'days') >= 25)
+            return moment(dataStr).format(pattern)
+        return moment(dataStr).fromNow()
     }
     return dataStr
 })

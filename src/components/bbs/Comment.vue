@@ -17,8 +17,9 @@
           </div>
           <div class="comment-action text-caption">
             <span class="comment-time mr-2">{{comment.createdAt | moment}}</span>
-            <a class="reply-ac">回复</a>
+            <a class="reply-ac" @click="handleOpenNewComment(comment.id)">回复</a>
           </div>
+          <comment-new class="my-4" :postId="postId" :parentId="comment.id" v-if="showId === comment.id" />
           <div class="comment-reply" v-if="comment.children">
             <div class="reply-item" v-for="reply in comment.children" :key="reply.id">
               <div class="d-flex mt-3">
@@ -35,11 +36,12 @@
                     {{reply.content}}</span>
                   <div class="reply-action my-2 text-caption">
                     <span class="reply-time mr-2">{{reply.createdAt | moment}}</span>
-                    <a class="reply-ac">回复</a>
+                    <a class="reply-ac" @click="handleOpenNewComment(reply.id)">回复</a>
                   </div>
+
                 </div>
               </div>
-
+              <comment-new class="my-4" :postId="postId" :parentId="reply.id" v-if="showId === reply.id" />
             </div>
           </div>
         </div>
@@ -50,41 +52,32 @@
 
 <script>
 
+import CommentNew from "@/components/bbs/CommentNew";
 export default {
   name: "Comment",
+  components: {CommentNew},
   props: {
-    postId: {
-      type: String
-    },
     comments: {
       type: Array
     },
   },
   data() {
     return {
-
+      showId: null,
     }
   },
-  mounted() {
+  computed:{
+    postId() {
+      return this.comments[0].postId
+    }
   },
   methods: {
     hasParentReply(reply, comment) {
       return reply?.parent.id !== comment.id;
     },
-    // getParentReplyName(reply) {
-    //   const commentId = this.comment.id
-    //   const replyParentId = reply.parentId
-    //   if (replyParentId === commentId){
-    //     return null
-    //   }
-    //
-    //   for (const reply of this.comment.children) {
-    //     if (reply.id === replyParentId){
-    //       return reply.issuer.name
-    //     }
-    //   }
-    //   return null
-    // }
+    handleOpenNewComment(replyId) {
+      this.showId = replyId
+    }
   },
 }
 </script>
