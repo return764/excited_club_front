@@ -26,7 +26,7 @@
               </span>
             </div>
           </div>
-          <div class="author-block d-flex">
+          <div class="author-block d-flex mb-5">
             <v-avatar class="mx-3 my-2" color="indigo">
               <v-img :src="post.issuer.avatar"></v-img>
             </v-avatar>
@@ -35,8 +35,11 @@
               <div class="text-body-2 text--secondary">{{post.createdAt | moment}}</div>
             </div>
           </div>
-          <div class="content">{{post.content}}</div>
+          <div class="content" ref="content" v-resize="initialImgWidth" v-html="post.content"></div>
         </v-sheet>
+
+        <comment-new class="pt-5 pb-1"/>
+        <comment :comments="comments"/>
       </v-col>
       <v-col cols="3"></v-col>
     </v-row>
@@ -45,13 +48,23 @@
 
 <script>
 import postsApi from "@/services/posts";
+import CommentNew from "@/components/bbs/CommentNew";
+import Comment from "@/components/bbs/Comment";
+import commentsApi from "@/services/comments";
 
 export default {
   name: "PostPage",
+  components: {CommentNew, Comment},
   data() {
     return {
-      loading: false,
-      post: {}
+      loading: {
+        post: false,
+        comments: false
+      },
+      post: {
+        issuer: {}
+      },
+      comments: []
     }
   },
   computed:{
@@ -61,14 +74,59 @@ export default {
   },
   mounted() {
     this.handlePost()
+    this.handleComments()
+  },
+  updated() {
+    this.initialImgWidth()
   },
   methods:{
-    handlePost(){
-      this.loading = true
-      postsApi.get(this.postId).then(({data})=>{
+    async handlePost(){
+      this.loading.post = true
+      const {data} = await postsApi.get(this.postId)
+      if (data)
         this.post = data
-        this.loading = false
+      this.loading.post = false
+    },
+    async handleComments(){
+      this.loading.comments = true
+      const {data} = await commentsApi.list(this.postId)
+      if (data)
+        this.comments = data
+      this.loading.comments = false
+    },
+    treeToList (tree, parent, result = [], level = 0) {
+      tree.forEach(node => {
+        result.push(node)
+        node.level = level + 1
+        node.parent = this._.omit(parent, "children")
+        node.children && this.treeToList(node.children, node, result, level + 1)
+        delete node.children
       })
+      return result
+    },
+    checkComment() {
+      for (let comment of this.comments) {
+        if (comment.children){
+          comment.children = this.treeToList(comment.children, comment)
+          comment.children = this._.orderBy(comment.children, ["createdAt"], ["asc"])
+        }
+      }
+    },
+    initialImgWidth(){
+      //get the width of content(select by className)
+      const contentWidth = this.$refs.content.clientWidth
+      //set up image width with acquired value
+      const imgAll = this.$refs.content.querySelectorAll("img")
+      imgAll.forEach((img)=>{
+        img.style.setProperty("max-width",`${contentWidth}px`)
+      })
+    }
+  },
+  watch:{
+    "loading.comments"(v, ov){
+      if (ov && !v){
+        this.checkComment()
+      }
     }
   }
 }

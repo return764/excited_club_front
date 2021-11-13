@@ -15,7 +15,7 @@
               label="标题"
               class="post-title"
               flat
-              v-model="title"
+              v-model="insertParams.name"
               solo
           ></v-text-field>
 
@@ -40,7 +40,11 @@
         </span>
             </template>
           </v-select>
-          <v-btn text color="primary">发布</v-btn>
+          <v-btn text color="primary"
+                 :loading="publishing"
+                 :disabled="publishing"
+                 @click="publish"
+                  >发布</v-btn>
           <v-icon color="error"
                   @click="windowMinus">mdi-minus</v-icon>
           <v-icon color="error"
@@ -50,7 +54,13 @@
         </div>
       </div>
       <div id="editor" class="my-3">
-        <mavon-editor v-model="md" :toolbars="toolbars" @change="inputMd" style="height: 100%"></mavon-editor>
+        <mavon-editor v-model="md"
+                      ref="editor"
+                      :toolbars="toolbars"
+                      @change="inputMd"
+                      @imgAdd="imageUpload"
+                      :externalLink="false"
+                      style="height: 100%"></mavon-editor>
       </div>
     </v-sheet>
   </v-bottom-sheet>
@@ -59,6 +69,8 @@
 
 <script>
 import 'mavon-editor/dist/css/index.css'
+import postsApi from "@/services/posts";
+import {mapGetters} from "vuex";
 
 export default {
   name: "PostNew",
@@ -73,8 +85,13 @@ export default {
   },
   data() {
     return {
-      title: "",
-      html: "",
+      insertParams:{
+        name: "",
+        content: "",
+        issuerId: "",
+        boardName: "",
+      },
+      publishing: false,
       md: "",
       tags: ['置顶','TC','SCM'],
       animatedTimeout: -1,
@@ -126,8 +143,29 @@ export default {
     },
     inputMd(value, render){
       // render 为 markdown 解析后的结果
-      this.html = render;
+      this.insertParams.content = render;
+    },
+    async imageUpload(filename, file) {
+      let formData = new FormData()
+
+      formData.append('image', file)
+      const {data} = await postsApi.uploadImage(formData)
+      this.$refs.editor.$img2Url(filename, process.env.VUE_APP_API_BASE_URL+"/"+encodeURI(data))
+    },
+    async publish() {
+      this.publishing = true
+      this.insertParams.issuerId = this.user.id
+      this.insertParams.boardName = this.user.departmentName
+      const {data} = await postsApi.insert(this.insertParams)
+      if (data.result === "ok"){
+        this.publishing = false
+        this.$message.success("发布成功!")
+        this.windowClose()
+      }
     }
+  },
+  computed:{
+    ...mapGetters("account",["user"])
   },
   watch:{
     show(v){

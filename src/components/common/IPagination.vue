@@ -46,11 +46,11 @@ export default {
   },
   methods:{
     handlePaginationChange(page){
+      if (page === this.value)
+        return
       this.$emit("change",page)
     },
     handleGoTo(){
-      console.log(typeof this.toPage)
-      console.log(this.toPage)
       this.handlePaginationChange(this.toPage)
     }
   }

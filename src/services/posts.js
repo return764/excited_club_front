@@ -23,4 +23,20 @@ postsApi.get = (id) => {
   })
 }
 
+postsApi.uploadImage = (file) => {
+  return request({
+    url: `${POSTS}/upload`,
+    method: METHOD.POST,
+    data: file,
+  })
+}
+
+postsApi.insert = (data) => {
+  return request({
+    url: POSTS,
+    method: METHOD.POST,
+    data: data,
+  })
+}
+
 export default postsApi

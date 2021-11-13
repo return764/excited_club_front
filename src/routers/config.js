@@ -134,6 +134,45 @@ const options = {
                 }
               ]
             },
+            {
+              path: "u",
+              component: () => import("@/layouts/BlankLayout"),
+              name: "用户",
+              meta: {
+                name: "用户",
+                invisible: true,
+                inBreadcrumb: true
+              },
+              children: [
+                {
+                  path: "myTopic",
+                  name: "我的话题",
+                  component: () => import("@/layouts/BlankLayout"),
+                  meta: {
+                    name: "我的话题",
+                    invisible: true
+                  }
+                },
+                {
+                  path: "myReply",
+                  name: "我的回复",
+                  component: () => import("@/layouts/BlankLayout"),
+                  meta: {
+                    name: "我的回复",
+                    invisible: true
+                  }
+                },
+                {
+                  path: "replyMe",
+                  name: "回复我的",
+                  component: () => import("@/layouts/BlankLayout"),
+                  meta: {
+                    name: "回复我的",
+                    invisible: true
+                  }
+                }
+              ]
+            }
           ],
 
         },

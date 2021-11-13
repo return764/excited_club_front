@@ -38,7 +38,7 @@
                   v-model="selectedItem"
                   color="primary"
               >
-                <v-list-item>
+                <v-list-item to="/bbs/u/myTopic">
                   <v-list-item-icon>
                     <v-icon>mdi-post</v-icon>
                   </v-list-item-icon>
@@ -47,7 +47,7 @@
                   </v-list-item-content>
                 </v-list-item>
 
-                <v-list-item>
+                <v-list-item to="/bbs/u/myReply">
                   <v-list-item-icon>
                     <v-icon>mdi-reply</v-icon>
                   </v-list-item-icon>
@@ -56,7 +56,7 @@
                   </v-list-item-content>
                 </v-list-item>
 
-                <v-list-item>
+                <v-list-item to="/bbs/u/replyMe">
                   <v-list-item-icon>
                     <v-icon>mdi-message-reply-text</v-icon>
                   </v-list-item-icon>
