@@ -13,5 +13,13 @@ commentsApi.list = (postId) =>{
   })
 }
 
+commentsApi.publish = (data) => {
+  return request({
+    url: COMMENTS,
+    method: METHOD.POST,
+    data: data
+  })
+}
+
 
 export default commentsApi

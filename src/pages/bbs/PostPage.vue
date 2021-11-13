@@ -38,7 +38,7 @@
           <div class="content" ref="content" v-resize="initialImgWidth" v-html="post.content"></div>
         </v-sheet>
 
-        <comment-new class="pt-5 pb-1"/>
+        <comment-new :postId="post.id" class="pt-5 pb-1"/>
         <comment :comments="comments"/>
       </v-col>
       <v-col cols="3"></v-col>

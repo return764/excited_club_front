@@ -18,7 +18,7 @@
             @blur="handleBlur"
             @focus="handleFocus"
             placeholder="在此处评论..."
-            :value="value"
+            v-model="comment.content"
             no-resize
             dense
         >
@@ -28,7 +28,7 @@
         </v-textarea>
       </div>
       <div v-show="showAction" class="comment-action text-right">
-        <v-btn small color="primary">回复</v-btn>
+        <v-btn small color="primary" @click="handlePublish">回复</v-btn>
       </div>
     </div>
   </v-sheet>
@@ -37,24 +37,46 @@
 
 <script>
 import {mapGetters} from "vuex";
+import commentsApi from "@/services/comments";
 
 export default {
   name: "CommentNew",
+  props: {
+    postId: {
+      type: String
+    }
+  },
   data() {
     return {
       max: 500,
-      value: "",
       inputRows: 1,
-      showAction: false
+      showAction: false,
+      comment: {
+        parentId: null,
+        content: "",
+        postId: null,
+        issuerId: null
+      }
     }
   },
   computed:{
     ...mapGetters("account",["user"]),
   },
   methods:{
+    async handlePublish() {
+      this.comment.postId = this.postId
+      this.comment.issuerId = this.user.id
+      const {data} = await commentsApi.publish(this.comment)
+      if (data && data.result === "ok") {
+        this.$message.success("评论成功~")
+        this.comment.content = ""
+      }
+    },
     handleBlur(){
-      this.inputRows = 1
-      this.showAction = false
+      if (!this.comment.content){
+        this.inputRows = 1
+        this.showAction = false
+      }
     },
     handleFocus(){
       this.inputRows = 5
