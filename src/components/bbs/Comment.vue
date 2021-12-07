@@ -19,31 +19,35 @@
             <span class="comment-time mr-2">{{comment.createdAt | moment}}</span>
             <a class="reply-ac" @click="handleOpenNewComment(comment.id)">回复</a>
           </div>
-          <comment-new class="my-4" :postId="postId" :parentId="comment.id" v-if="showId === comment.id" />
-          <div class="comment-reply" v-if="comment.children">
-            <div class="reply-item" v-for="reply in comment.children" :key="reply.id">
-              <div class="d-flex mt-3">
-                <div class="reply-user text-body-2 font-weight-bold mr-2">
-                  <v-avatar size="30" color="grey">
-                    12
-                    <!--        <v-img :src=""></v-img>-->
-                  </v-avatar>
-                </div>
-                <div class="reply-con">
-                  <span class="reply-user text-body-2 font-weight-bold">{{reply.issuer.name}}</span>
-                  <span class="reply-content text-body-2 ml-2 text-break">
+          <comment-new class="my-4" @after="handleReply" :postId="postId" :parentId="comment.id" v-if="showId === comment.id" />
+          <template v-if="comment.children">
+            <div v-if="!isPagination(comment.id)" class="comment-reply">
+              <div class="reply-item" v-for="reply in comment.children" :key="reply.id">
+                <div class="d-flex mt-3">
+                  <div class="reply-user text-body-2 font-weight-bold mr-2">
+                    <v-avatar size="30" color="grey">
+                      12
+                      <!--        <v-img :src=""></v-img>-->
+                    </v-avatar>
+                  </div>
+                  <div class="reply-con">
+                    <span class="reply-user text-body-2 font-weight-bold">{{reply.issuer.name}}</span>
+                    <span class="reply-content text-body-2 ml-2 text-break">
                     {{hasParentReply(reply, comment)? "回复:@" +reply.parent.issuer.name: null}}
                     {{reply.content}}</span>
-                  <div class="reply-action my-2 text-caption">
-                    <span class="reply-time mr-2">{{reply.createdAt | moment}}</span>
-                    <a class="reply-ac" @click="handleOpenNewComment(reply.id)">回复</a>
-                  </div>
+                    <div class="reply-action my-2 text-caption">
+                      <span class="reply-time mr-2">{{reply.createdAt | moment}}</span>
+                      <a class="reply-ac" v-if="user.id !== reply.issuer.id" @click="handleOpenNewComment(reply.id)">回复</a>
+                    </div>
 
+                  </div>
                 </div>
+                <comment-new class="my-4" @after="handleReply" :rootId="comment.id" :postId="postId" :parentId="reply.id" v-if="showId === reply.id" />
               </div>
-              <comment-new class="my-4" :postId="postId" :parentId="reply.id" v-if="showId === reply.id" />
             </div>
-          </div>
+            <reply-page v-else :commentId="comment.id" :postId="postId"/>
+            <div v-if="comment.count > 3 && !isPagination(comment.id)" class="text-caption">共{{comment.count}}条回复, <a @click="showCommentPagination(comment.id)">点击查看</a></div>
+          </template>
         </div>
       </div>
     </v-sheet>
@@ -51,11 +55,13 @@
 </template>
 
 <script>
-
 import CommentNew from "@/components/bbs/CommentNew";
+import ReplyPage from "@/components/bbs/ReplyPage";
+import {mapGetters} from "vuex";
+
 export default {
   name: "Comment",
-  components: {CommentNew},
+  components: {CommentNew, ReplyPage},
   props: {
     comments: {
       type: Array
@@ -64,12 +70,14 @@ export default {
   data() {
     return {
       showId: null,
+      showPagination: []
     }
   },
   computed:{
+    ...mapGetters("account",["user"]),
     postId() {
       return this.comments[0].postId
-    }
+    },
   },
   methods: {
     hasParentReply(reply, comment) {
@@ -77,6 +85,19 @@ export default {
     },
     handleOpenNewComment(replyId) {
       this.showId = replyId
+    },
+    handleReply() {
+      this.showId = null
+      this.$emit("after")
+    },
+    isPagination(commentId) {
+      return this.showPagination.indexOf(commentId) !== -1
+    },
+    showCommentPagination(commentId) {
+      // todo 点击后分页显示评论 类似于bilibili
+      if (!this.isPagination(commentId)) {
+        this.showPagination.push(commentId)
+      }
     }
   },
 }

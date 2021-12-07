@@ -42,11 +42,11 @@
             <div class="comment-head text-h6 mb-2">
               {{commentCount}}条评论
             </div>
-            <comment-new :postId="post.id"/>
+            <comment-new @after="refreshComment" :postId="post.id"/>
           </v-sheet>
         </div>
 
-        <comment :comments="comments"/>
+        <comment @after="refreshComment" :comments="comments"/>
       </v-col>
       <v-col cols="3"></v-col>
     </v-row>
@@ -109,6 +109,10 @@ export default {
         this.commentCount = data
       }
     },
+    refreshComment() {
+      this.handleComments()
+      this.handleCountComment()
+    },
     treeToList (tree, parent, result = [], level = 0) {
       tree.forEach(node => {
         result.push(node)
@@ -123,7 +127,7 @@ export default {
       for (let comment of this.comments) {
         if (comment.children){
           comment.children = this.treeToList(comment.children, comment)
-          comment.children = this._.orderBy(comment.children, ["createdAt"], ["asc"])
+          comment.children = this._.orderBy(comment.children, ["createdAt"], ["desc"])
         }
       }
     },

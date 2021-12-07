@@ -31,5 +31,13 @@ commentsApi.count = (postId) => {
   })
 }
 
+commentsApi.pageReply = (params) => {
+  return request({
+    url: `${COMMENTS}/reply`,
+    method: METHOD.GET,
+    params: params
+  })
+}
+
 
 export default commentsApi

@@ -41,6 +41,9 @@ export default {
     parentId: {
       type: String,
       default: null
+    },
+    rootId: {
+      type: String
     }
   },
   data() {
@@ -50,6 +53,7 @@ export default {
       showAction: false,
       comment: {
         parentId: null,
+        rootId: null,
         content: "",
         postId: null,
         issuerId: null
@@ -62,14 +66,20 @@ export default {
   methods:{
     async handlePublish() {
       this.comment.postId = this.postId
+      this.comment.rootId = this.rootId
       this.comment.issuerId = this.user.id
       this.comment.parentId = this.parentId
+      if (this.comment.content.length < 1) {
+        this.$message.success("评论不能为空哦~")
+        return
+      }
+
       const {data} = await commentsApi.publish(this.comment)
       if (data && data.result === "ok") {
         this.$message.success("评论成功~")
         this.comment.content = ""
         this.$emit("after")
-        //TODO 异步刷新组件 并新增分页
+        //TODO 并新增分页
       }
     },
     handleBlur(){
