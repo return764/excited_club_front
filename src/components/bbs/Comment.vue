@@ -4,8 +4,7 @@
       <div class="comment d-flex" v-for="comment in comments" :key="comment.id">
         <div class="comment-avatar py-3 pr-5">
           <v-avatar color="grey">
-            12
-            <!--        <v-img :src=""></v-img>-->
+            <v-img :src="comment.issuer.avatar"></v-img>
           </v-avatar>
         </div>
         <div class="comment-con py-3 flex-grow-1">
@@ -26,8 +25,7 @@
                 <div class="d-flex mt-3">
                   <div class="reply-user text-body-2 font-weight-bold mr-2">
                     <v-avatar size="30" color="grey">
-                      12
-                      <!--        <v-img :src=""></v-img>-->
+                      <v-img :src="reply.issuer.avatar"></v-img>
                     </v-avatar>
                   </div>
                   <div class="reply-con">

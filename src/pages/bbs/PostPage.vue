@@ -15,7 +15,7 @@
                 <v-icon small>
                   mdi-message-reply-outline
                 </v-icon>
-                1234
+                {{commentCount}}
               </span>
 
               <span class="stat-item">
