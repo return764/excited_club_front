@@ -153,9 +153,13 @@ export default {
       this.$refs.editor.$img2Url(filename, process.env.VUE_APP_API_BASE_URL+"/"+encodeURI(data))
     },
     async publish() {
-      this.publishing = true
       this.insertParams.issuerId = this.user.id
       this.insertParams.boardName = this.user.departmentName
+      if (this.insertParams.name === "") {
+        this.$message.warning("标题不能为空")
+        return
+      }
+      this.publishing = true
       const {data} = await postsApi.insert(this.insertParams)
       if (data.result === "ok"){
         this.publishing = false
