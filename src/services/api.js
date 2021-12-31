@@ -6,5 +6,6 @@ module.exports = {
     USERS: `/api/content/users`,
     BOARDS: `/api/content/boards`,
     POSTS: `/api/content/posts`,
-    COMMENTS: `/api/content/comments`
+    COMMENTS: `/api/content/comments`,
+    TAGS: `/api/content/tags`
 }

@@ -8,7 +8,11 @@
           </div>
           <div class="d-flex justify-space-between">
             <div>
-              <v-chip small label>置顶</v-chip>
+              <v-chip small label class="mr-1"
+                      text-color="white"
+                      :color="tag.color"
+                      v-for="tag in post.tags"
+                      :key="tag.id">{{tag.name}}</v-chip>
             </div>
             <div>
               <span class="stat-item">

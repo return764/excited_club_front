@@ -11,7 +11,16 @@
                 </v-avatar>
               </div>
               <div class="post-item-content">
-                <div class="post-item-title"><a :href="`/bbs/p/${item.id}`">{{item.name}}</a></div>
+                <div class="post-item-title">
+                  <a class="text-subtitle-1" :href="`/bbs/p/${item.id}`">{{item.name}}</a>
+                  <div class="px-2 post-chips">
+                    <v-chip small label class="py-1 mr-1"
+                            text-color="white"
+                            :color="tag.color"
+                            v-for="tag in item.tags"
+                            :key="tag.id">{{tag.name}}</v-chip>
+                  </div>
+                </div>
                 <div class="post-item-desc text--secondary text-body-2">{{item.createdAt | moment}}</div>
               </div>
             </div>
@@ -112,6 +121,9 @@ export default {
         position: absolute;
         left: 0;
         top: 14px;
+      }
+      .post-chips{
+        display: inline-block;
       }
 
       .post-item-desc{

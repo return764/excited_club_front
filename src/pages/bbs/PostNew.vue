@@ -23,14 +23,17 @@
         <div class="opt d-flex flex-grow-0">
           <v-select
               style="width: 12rem"
+              v-model="selectedTagIds"
               :items="tags"
+              item-text="name"
+              item-value="id"
               label="标签" flat
               chips multiple small-chips
               dense solo single-line
           >
             <template v-slot:selection="{ item, index }">
               <v-chip v-if="index === 0">
-                <span>{{ item }}</span>
+                <span>{{ item.name }}</span>
               </v-chip>
               <span
                   v-if="index === 1"
@@ -71,6 +74,7 @@
 import 'mavon-editor/dist/css/index.css'
 import postsApi from "@/services/posts";
 import {mapGetters} from "vuex";
+import tagsApi from "@/services/tags";
 
 export default {
   name: "PostNew",
@@ -90,9 +94,11 @@ export default {
         content: "",
         issuerId: "",
         boardName: "",
+        tags: ""
       },
       publishing: false,
       md: "",
+      selectedTagIds: [],
       tags: ['置顶','TC','SCM'],
       animatedTimeout: -1,
       toolbars: {
@@ -123,6 +129,9 @@ export default {
       }
     }
   },
+  mounted() {
+    this.handleTags()
+  },
   methods:{
     windowMinus(){
       const bs = this.$refs.bs.$el.parentNode
@@ -145,6 +154,10 @@ export default {
       // render 为 markdown 解析后的结果
       this.insertParams.content = render;
     },
+    async handleTags() {
+      let {data} = await tagsApi.list()
+      this.tags = data
+    },
     async imageUpload(filename, file) {
       let formData = new FormData()
 
@@ -155,6 +168,7 @@ export default {
     async publish() {
       this.insertParams.issuerId = this.user.id
       this.insertParams.boardName = this.user.departmentName
+      this.insertParams.tags = this.selectedTagIds.join(",")
       if (this.insertParams.name === "") {
         this.$message.warning("标题不能为空")
         return
@@ -176,6 +190,9 @@ export default {
       if (v){
         window.addEventListener("wheel",(event)=>event.stopPropagation(), true)
       }
+    },
+    selectedTagIds() {
+      console.log(this.selectedTagIds.join(","))
     }
   }
 }
