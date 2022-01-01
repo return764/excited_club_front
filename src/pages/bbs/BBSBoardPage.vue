@@ -98,7 +98,6 @@ export default {
     handleListBoard(){
       boardsApi.list().then(({data})=>{
         this.boards = data
-        console.log(data)
       })
     }
   }

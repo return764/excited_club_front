@@ -30,7 +30,7 @@
       </avatar-menu>
     </v-app-bar>
     <v-main app class="grey lighten-5 background pa-0 pb-5">
-      <router-view/>
+      <router-view v-if="isRouterAlive"/>
     </v-main>
     <v-footer class="footer" padless>
       <v-container>
@@ -53,10 +53,16 @@ import ITabs from "@/components/ITabs";
 export default {
   name: 'App',
   components: {ITabs, AvatarMenu, RegisterForm, LoginForm},
+  provide() {
+    return {
+      reload: this.reload
+    }
+  },
   data: () => ({
     isScrolling: false,
     loginDialog: false,
-    registerDialog: false
+    registerDialog: false,
+    isRouterAlive: true
   }),
   created() {
     this.setTitle()
@@ -75,6 +81,12 @@ export default {
       const key = route.path === '/index' || route.path === '/' ? '首页' : route.matched[route.matched.length - 1].name
       // todo k
       document.title = process.env.VUE_APP_NAME + ' | ' + key
+    },
+    reload() {
+      this.isRouterAlive = false
+      this.$nextTick(() => {
+        this.isRouterAlive = true
+      })
     }
   },
   computed: {

@@ -78,6 +78,7 @@ import tagsApi from "@/services/tags";
 
 export default {
   name: "PostNew",
+  inject: ["reload"],
   model:{
     prop:"show"
   },
@@ -175,9 +176,10 @@ export default {
       }
       this.publishing = true
       const {data} = await postsApi.insert(this.insertParams)
+      this.publishing = false
       if (data.result === "ok"){
-        this.publishing = false
         this.$message.success("发布成功!")
+        this.reload()
         this.windowClose()
       }
     }
