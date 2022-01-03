@@ -18,7 +18,7 @@
             <span class="comment-time mr-2">{{comment.createdAt | moment}}</span>
             <a class="reply-ac" @click="handleOpenNewComment(comment.id)">回复</a>
           </div>
-          <comment-new class="my-4" @after="handleReply" :postId="postId" :parentId="comment.id" v-if="showId === comment.id" />
+          <comment-new class="my-4" @after="handleReply" :postId="postId" :rootId="comment.id" :parentId="comment.id" v-if="showId === comment.id" />
           <template v-if="comment.children">
             <div v-if="!isPagination(comment.id)" class="comment-reply">
               <div class="reply-item" v-for="reply in comment.children" :key="reply.id">
