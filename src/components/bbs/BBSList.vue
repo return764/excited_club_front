@@ -1,6 +1,6 @@
 <template>
   <div class="bbs-list">
-      <v-sheet elevation="2" style="position: relative">
+    <v-sheet elevation="2" style="position: relative">
       <div class="posts-wrap px-5">
         <v-fade-transition hide-on-leave>
           <span v-if="!loading">

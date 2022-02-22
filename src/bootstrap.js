@@ -6,7 +6,7 @@ function bootstrap({router, store, message}) {
     // 设置应用配置
     setAppOptions({router, store})
 
-    loadInterceptors(interceptors,{message})
+    loadInterceptors(interceptors,{router, message})
 
     loadRoutes()
 }

@@ -13,6 +13,14 @@ postsApi.list = (routerName, params) => {
   })
 }
 
+postsApi.getMyTopic = (params) => {
+  return request({
+    url: `${POSTS}/ownTopic`,
+    method: METHOD.GET,
+    params: params
+  })
+}
+
 postsApi.get = (id) => {
   return request({
     url: POSTS,
