@@ -22,7 +22,7 @@
       <v-spacer v-show="!$vuetify.breakpoint.smAndUp"/>
       <v-btn text
              v-if="!isAuth"
-             @click.stop="loginDialog = true"
+             @click.stop="setLoginShow(true)"
              color="primary">登录/注册</v-btn>
       <avatar-menu v-else
         :user="user"
@@ -38,21 +38,19 @@
         <p>蜀ICP备20014393号-1</p>
       </v-container>
     </v-footer>
-    <login-form v-if="!isAuth" v-model="loginDialog" @submit="handleLogin" @toRegister="registerDialog = true"/>
-    <register-form v-if="!isAuth" v-model="registerDialog" @submit="handleLogin"/>
+    <login-and-register/>
   </v-app>
 </template>
 
 <script>
-import {mapGetters} from "vuex";
-import LoginForm from "@/components/LoginForm";
-import RegisterForm from "@/components/RegisterForm";
+import {mapGetters, mapMutations} from "vuex";
 import AvatarMenu from "@/components/AvatarMenu";
 import ITabs from "@/components/ITabs";
+import LoginAndRegister from "@/components/loginAndRegister/LoginAndRegister";
 
 export default {
   name: 'App',
-  components: {ITabs, AvatarMenu, RegisterForm, LoginForm},
+  components: {LoginAndRegister, ITabs, AvatarMenu},
   provide() {
     return {
       reload: this.reload
@@ -60,21 +58,16 @@ export default {
   },
   data: () => ({
     isScrolling: false,
-    loginDialog: false,
-    registerDialog: false,
     isRouterAlive: true
   }),
   created() {
     this.setTitle()
   },
   methods: {
+    ...mapMutations("variable",["setLoginShow"]),
     onScroll() {
       this.isScrolling = (window.pageYOffset ||
           document.documentElement.scrollTop || 0) > 20
-    },
-    handleLogin(){
-      this.registerDialog = false
-      this.loginDialog = false
     },
     setTitle(){
       const route = this.$route
@@ -91,7 +84,6 @@ export default {
   },
   computed: {
     ...mapGetters("account",["isAuth","user"]),
-
   },
   watch:{
     $route(){

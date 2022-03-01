@@ -16,6 +16,7 @@
     "moment": "^2.29.1",
     "velocity-animate": "^2.0.6",
     "vue": "^2.6.11",
+    "vue-fragment": "^1.5.2",
     "vue-infinite-scroll": "^2.0.2",
     "vue-router": "^3.4.9",
     "vue-waterfall": "^1.0.6",

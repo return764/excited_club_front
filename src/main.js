@@ -11,8 +11,10 @@ import '@/utils/filter'
 import {ellipsisDirective} from '@hyjiacan/vue-ellipsis'
 import Message from "@/components/common/message";
 import {initRouter} from "@/routers";
+import Fragment from "vue-fragment";
 
 
+Vue.use(Fragment.Plugin)
 Vue.use(mavonEditor)
 Vue.use(Message)
 Vue.directive(ellipsisDirective.name, ellipsisDirective)
