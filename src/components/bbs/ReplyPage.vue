@@ -4,7 +4,7 @@
       <div class="d-flex mt-3">
         <div class="reply-user text-body-2 font-weight-bold mr-2">
           <v-avatar size="30" color="grey">
-            12
+            <v-img :src="reply.issuer.avatar"></v-img>
           </v-avatar>
         </div>
         <div class="reply-con">
@@ -14,7 +14,7 @@
                     {{reply.content}}</span>
           <div class="reply-action my-2 text-caption">
             <span class="reply-time mr-2">{{reply.createdAt | moment}}</span>
-            <a class="reply-ac" v-if="user.id !== reply.issuer.id" @click="handleOpenNewComment(reply.id)">回复</a>
+            <a class="reply-ac" v-if="user && user.id !== reply.issuer.id" @click="handleOpenNewComment(reply.id)">回复</a>
           </div>
 
         </div>

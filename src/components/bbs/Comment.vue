@@ -16,7 +16,7 @@
           </div>
           <div class="comment-action text-caption">
             <span class="comment-time mr-2">{{comment.createdAt | moment}}</span>
-            <a class="reply-ac" @click="handleOpenNewComment(comment.id)">回复</a>
+            <a class="reply-ac" v-if="user" @click="handleOpenNewComment(comment.id)">回复</a>
           </div>
           <comment-new class="my-4" @after="handleReply" :postId="postId" :rootId="comment.id" :parentId="comment.id" v-if="showId === comment.id" />
           <template v-if="comment.children">
@@ -35,7 +35,7 @@
                     {{reply.content}}</span>
                     <div class="reply-action my-2 text-caption">
                       <span class="reply-time mr-2">{{reply.createdAt | moment}}</span>
-                      <a class="reply-ac" v-if="user.id !== reply.issuer.id" @click="handleOpenNewComment(reply.id)">回复</a>
+                      <a class="reply-ac" v-if="user && user.id !== reply.issuer.id" @click="handleOpenNewComment(reply.id)">回复</a>
                     </div>
 
                   </div>

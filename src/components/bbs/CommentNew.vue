@@ -1,26 +1,33 @@
 <template>
   <div class="comment-new">
     <div class="comment-middle d-flex">
-      <v-avatar class="mr-2">
-        <v-img :src="user.avatar"/>
-      </v-avatar>
-      <v-textarea
-          :counter="max"
-          :maxLength="max"
-          ref="tt"
-          outlined
-          :rows="inputRows"
-          @blur="handleBlur"
-          @focus="handleFocus"
-          placeholder="在此处评论..."
-          v-model="comment.content"
-          no-resize
-          dense
-      >
-        <template slot-scope="{props}" slot="counter">
-          {{props.value}}/{{props.max}}字
-        </template>
-      </v-textarea>
+      <template v-if="user">
+        <v-avatar class="mr-2">
+          <v-img :src="user.avatar"/>
+        </v-avatar>
+        <v-textarea
+            :counter="max"
+            :maxLength="max"
+            ref="tt"
+            outlined
+            :rows="inputRows"
+            @blur="handleBlur"
+            @focus="handleFocus"
+            placeholder="在此处评论..."
+            v-model="comment.content"
+            no-resize
+            dense
+        >
+          <template slot-scope="{props}" slot="counter">
+            {{props.value}}/{{props.max}}字
+          </template>
+        </v-textarea>
+      </template>
+      <template v-else>
+        <div class="need-login-tips">
+          请<span @click.stop="setLoginShow(true)">登录</span>后回复
+        </div>
+      </template>
     </div>
     <div v-show="showAction" class="comment-action text-right">
       <v-btn small color="primary" @click="handlePublish">回复</v-btn>
@@ -29,7 +36,7 @@
 </template>
 
 <script>
-import {mapGetters} from "vuex";
+import {mapGetters, mapMutations} from "vuex";
 import commentsApi from "@/services/comments";
 
 export default {
@@ -64,11 +71,13 @@ export default {
     ...mapGetters("account",["user"]),
   },
   methods:{
+    ...mapMutations("variable",["setLoginShow"]),
     async handlePublish() {
       this.comment.postId = this.postId
       this.comment.rootId = this.rootId
       this.comment.issuerId = this.user.id
       this.comment.parentId = this.parentId
+      console.log(this.comment.content)
       if (this.comment.content.length < 1) {
         this.$message.success("评论不能为空哦~")
         return
@@ -83,10 +92,10 @@ export default {
       }
     },
     handleBlur(){
-      if (!this.comment.content){
-        this.inputRows = 1
-        this.showAction = false
-      }
+      // if (!this.comment.content){
+      //   this.inputRows = 1
+      //   this.showAction = false
+      // }
     },
     handleFocus(){
       this.inputRows = 5
@@ -102,6 +111,17 @@ export default {
     font-size: 16px;
     min-height: 16px;
     line-height: 16px;
+  }
+  .comment-middle {
+    justify-content: center;
+  }
+  .need-login-tips {
+    margin: .7rem 0;
+  }
+  .need-login-tips span {
+    cursor: pointer;
+    color: #1890ff;
+    text-decoration: underline;
   }
 }
 </style>

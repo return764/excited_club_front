@@ -29,6 +29,7 @@
                           label="密码*"
                           :rules="rules.password"
                           v-model="form.password"
+                          type="password"
                           validate-on-blur
                           required
                       ></v-text-field>
@@ -38,6 +39,7 @@
                           label="第二次密码*"
                           :rules="handlePasswordCheck()"
                           v-model="password1"
+                          type="password"
                           required
                       ></v-text-field>
                     </v-col>
