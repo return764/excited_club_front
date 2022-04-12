@@ -38,11 +38,9 @@ export default {
         _name,
         message
       },defaultOption,option)
-      console.log(option)
       this.instances.push(option)
 
       setTimeout(()=>{
-        console.log(1)
         this.remove(_name)
       },option.timeout || this.timeout)
     },

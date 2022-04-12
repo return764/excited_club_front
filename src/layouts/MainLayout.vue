@@ -3,7 +3,7 @@
     <v-sheet
         height="30vh"
         width="100vw"
-        class="grey lighten-3"
+        class="grey lighten-4"
     >
       <v-container class="fill-height">
         <v-row class="fill-height justify-center align-content-center">
@@ -24,7 +24,11 @@
     >
       <v-tab v-for="(it,i) in tabs" :to="it.path" :key="i">{{ it.name }}</v-tab>
     </v-tabs>
-    <router-view/>
+    <div class="background"
+         :style="{'--bg-img': background}"
+      >
+      <router-view/>
+    </div>
   </div>
 </template>
 
@@ -36,14 +40,26 @@ export default {
   data(){
     return{
       breadcrumbItems:[],
-      tabs:[]
+      tabs:[],
+      background: "url("+require('../assets/background.jpeg')+")"
     }
+  },
+  methods: {
+    setBackground(url) {
+      this.background = "url("+require('../assets/'+url)+")"
+    },
   },
   watch:{
     $route:{
       handler:function(o){
         this.breadcrumbItems = getBreadcrumbs(o)
         this.tabs = getBaseChildrenRoute(o)
+
+        if (this.$route.path.startsWith("/bbs")) {
+          this.setBackground("background.jpeg")
+        } else {
+          this.setBackground("background.svg")
+        }
       },
       immediate:true
     }
@@ -55,4 +71,15 @@ export default {
 .title{
 
 }
+.background {
+  //background-image: url(./assets/background.svg);
+  //background-repeat: repeat;
+  min-height: 70vh;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-image: var(--bg-img);
+  background-size:cover;
+}
+
 </style>

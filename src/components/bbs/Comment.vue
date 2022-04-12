@@ -92,7 +92,6 @@ export default {
       return this.showPagination.indexOf(commentId) !== -1
     },
     showCommentPagination(commentId) {
-      // todo 点击后分页显示评论 类似于bilibili
       if (!this.isPagination(commentId)) {
         this.showPagination.push(commentId)
       }

@@ -7,5 +7,6 @@ module.exports = {
     BOARDS: `/api/content/boards`,
     POSTS: `/api/content/posts`,
     COMMENTS: `/api/content/comments`,
-    TAGS: `/api/content/tags`
+    TAGS: `/api/content/tags`,
+    REFRESH_TOKEN: '/api/auth/refresh_token'
 }

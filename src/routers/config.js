@@ -105,7 +105,7 @@ const options = {
                 {
                   name:"所有板块",
                   path:"home",
-                  component: () => import("@/components/bbs/BBSList"),
+                  component: () => import("@/components/bbs/MainPostList"),
                   meta: {
                     name: "所有板块",
                     invisible: true

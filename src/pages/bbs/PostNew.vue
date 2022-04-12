@@ -131,7 +131,7 @@ export default {
     }
   },
   mounted() {
-    this.handleTags()
+    // this.handleTags()
   },
   methods:{
     windowMinus(){
@@ -172,6 +172,10 @@ export default {
       this.insertParams.tags = this.selectedTagIds.join(",")
       if (this.insertParams.name === "") {
         this.$message.warning("标题不能为空")
+        return
+      }
+      if (this.md === "") {
+        this.$message.warning("帖子不能为空")
         return
       }
       this.publishing = true

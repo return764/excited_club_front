@@ -51,4 +51,20 @@ usersApi.loginEmail = (email,password)=>{
     })
 }
 
+usersApi.getMyTopic = (params) => {
+    return request({
+        url: `${USERS}/ownTopic`,
+        method: METHOD.GET,
+        params: params
+    })
+}
+
+usersApi.getReplayMe = (params) => {
+    return request({
+        url: `${USERS}/replayMe`,
+        method: METHOD.GET,
+        params: params
+    })
+}
+
 export default usersApi

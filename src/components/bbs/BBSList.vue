@@ -2,9 +2,12 @@
   <div class="bbs-list">
     <v-sheet elevation="2" style="position: relative">
       <div class="posts-wrap px-5">
-        <v-fade-transition hide-on-leave>
-          <span v-if="!loading">
-            <div class="post-item" v-for="item in posts" :key="item.id">
+        <v-fade-transition group hide-on-leave>
+          <template v-if="!loading">
+            <div class="post-item"
+                 @mouseenter="itemHover = item.id"
+                 @mouseleave="itemHover = null"
+                 v-for="item in posts" :key="item.id">
               <div class="post-user">
                 <v-avatar color="brown">
                   <v-img :src="item.issuer.avatar"/>
@@ -23,27 +26,39 @@
                 </div>
                 <div class="post-item-desc text--secondary text-body-2">{{item.createdAt | moment}}</div>
               </div>
+              <div class="post-item-action" v-show="itemHover === item.id && isAuth && item.issuer.id === user.id">
+                <v-menu bottom left nudge-bottom="30">
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                        icon
+                        v-bind="attrs"
+                        v-on="on"
+                    >
+                      <v-icon small>mdi-dots-vertical</v-icon>
+                    </v-btn>
+                  </template>
+
+                  <v-list>
+                    <v-list-item @click="handleDeletePost(item)">
+                      <v-list-item-title>删除</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+              </div>
             </div>
-          </span>
-          <span v-else>
+          </template>
+          <template v-else>
             <v-skeleton-loader
                 v-for="item in 10" :key="item"
                 type="list-item-avatar-two-line"
             ></v-skeleton-loader>
-          </span>
+          </template>
         </v-fade-transition>
       </div>
-<!--      <v-overlay :absolute="true" :opacity="0.1" :value="loading">-->
-<!--        <v-progress-circular-->
-<!--            indeterminate-->
-<!--            color="primary"-->
-<!--            size="64"-->
-<!--        ></v-progress-circular>-->
-<!--      </v-overlay>-->
     </v-sheet>
 
     <i-pagination
-        v-model="pagination.page"
+        :value="pagination.page"
         @change="handlePaginationChange"
         :length="pagination.totalPages"
     />
@@ -52,60 +67,57 @@
 
 <script>
 import IPagination from "@/components/common/IPagination";
+import {mapGetters} from "vuex";
 import postsApi from "@/services/posts";
 
 export default {
   name: "BBSList",
   components: {IPagination},
+  inject: ["reload"],
+  props: {
+    posts: {
+      type: Array,
+      default: () => []
+
+    },
+    loading: {
+      type: Boolean,
+      default: false
+    },
+    pagination: {
+      type: Object,
+      default: () => (
+          {
+            page: 1,
+            size: 10,
+            total: 0,
+            totalPages: 1
+          }
+      ),
+    }
+  },
   data(){
     return{
-      posts: [],
-      loading: false,
-      routerName: 'home',
-      pagination:{
-        page: 1,
-        size: 10,
-        total: 0,
-        totalPages: 1
-      },
-      queryParams: {
-        size: 10,
-        page: 0,
+      itemHover: null
+    }
+  },
+  methods: {
+    handlePaginationChange(page) {
+      this.$emit("pageChange", page)
+    },
+    async handleDeletePost({id, issuer}) {
+      if (issuer.id !== this.user.id) {
+        this.$message.error("只允许删除自己的帖子")
+        return
+      }
+      const {data} = await postsApi.delete(id)
+      if (data && data.result === 'ok') {
+        this.reload()
       }
     }
   },
-  methods:{
-    handleListPosts(){
-      this.queryParams.size = this.pagination.size
-      this.queryParams.page = this.pagination.page
-      this.loading = true
-      postsApi.list(this.routerName, this.queryParams).then(({data})=>{
-        if (data){
-          const {records,total,pages} = data
-          this.posts = records
-          this.pagination.total = total
-          this.pagination.totalPages = pages
-        }
-        this.loading = false
-      })
-    },
-    handlePaginationChange(page){
-      this.pagination.page = page
-      this.handleListPosts()
-    },
-  },
-  mounted() {
-    const splitRoute = this.$route.path.split("/")
-    this.routerName = this.$route.params.rn || splitRoute[splitRoute.length - 1]
-    this.handleListPosts()
-  },
-  watch:{
-    "$route.params.rn"(v, ov){
-        if (v !== ov){
-          this.routerName = v
-          this.handleListPosts()
-        }
-    }
+  computed: {
+    ...mapGetters("account",["user", "isAuth"])
   }
 }
 </script>
@@ -128,6 +140,12 @@ export default {
 
       .post-item-desc{
         line-height: 24px;
+      }
+
+      .post-item-action{
+        position: absolute;
+        right: 0;
+        top: 0;
       }
     }
 

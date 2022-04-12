@@ -29,7 +29,9 @@
       >
       </avatar-menu>
     </v-app-bar>
-    <v-main app class="grey lighten-5 background pa-0 pb-5">
+    <v-main ref="main"
+            app
+            class="main grey lighten-5 pa-0 pb-5">
       <router-view v-if="isRouterAlive"/>
     </v-main>
     <v-footer class="footer" padless>
@@ -96,10 +98,6 @@ export default {
 <style lang="scss">
 .v-application .v-breadcrumbs{
   padding-left: 12px;
-}
-.background {
-  background-image: url(./assets/background.svg);
-  background-repeat: repeat;
 }
 
 .top-img {

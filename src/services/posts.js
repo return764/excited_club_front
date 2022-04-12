@@ -13,14 +13,6 @@ postsApi.list = (routerName, params) => {
   })
 }
 
-postsApi.getMyTopic = (params) => {
-  return request({
-    url: `${POSTS}/ownTopic`,
-    method: METHOD.GET,
-    params: params
-  })
-}
-
 postsApi.get = (id) => {
   return request({
     url: POSTS,
@@ -44,6 +36,16 @@ postsApi.insert = (data) => {
     url: POSTS,
     method: METHOD.POST,
     data: data,
+  })
+}
+
+postsApi.delete = (id) => {
+  return request({
+    url: `${POSTS}/delete`,
+    method: METHOD.POST,
+    params: {
+      id: id
+    }
   })
 }
 

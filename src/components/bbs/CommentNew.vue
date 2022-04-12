@@ -2,9 +2,13 @@
   <div class="comment-new">
     <div class="comment-middle d-flex">
       <template v-if="user">
-        <v-avatar class="mr-2">
-          <v-img :src="user.avatar"/>
-        </v-avatar>
+        <template>
+          <v-avatar class="mr-2" v-if="!hiddenAvatar">
+            <v-img :src="user.avatar"/>
+          </v-avatar>
+          <div class="mr-2" v-else style="height: 48px;width: 48px"></div>
+        </template>
+
         <v-textarea
             :counter="max"
             :maxLength="max"
@@ -51,6 +55,10 @@ export default {
     },
     rootId: {
       type: String
+    },
+    hiddenAvatar: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

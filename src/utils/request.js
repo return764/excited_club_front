@@ -1,5 +1,12 @@
 import axios from "axios";
 
+
+// 跨域认证信息 header 名
+export const xsrfHeaderName = 'Authorization'
+
+axios.defaults.xsrfHeaderName= xsrfHeaderName
+axios.defaults.xsrfCookieName= xsrfHeaderName
+
 // http method
 
 const METHOD = {

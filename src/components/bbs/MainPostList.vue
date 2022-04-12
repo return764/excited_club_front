@@ -3,16 +3,17 @@
 </template>
 
 <script>
-import usersApi from "@/services/user";
 import BBSList from "@/components/bbs/BBSList";
+import postsApi from "@/services/posts";
 
 export default {
-  name: "MyTopic",
+  name: "MainPostList",
   components: {BBSList},
-  data(){
+  data () {
     return {
-      loading: false,
       posts: [],
+      loading: false,
+      routerName: 'home',
       pagination:{
         page: 1,
         size: 10,
@@ -25,15 +26,12 @@ export default {
       }
     }
   },
-  mounted(){
-    this.handleListPost()
-  },
   methods: {
-    handleListPost() {
+    handleListPosts(){
       this.queryParams.size = this.pagination.size
       this.queryParams.page = this.pagination.page
       this.loading = true
-      usersApi.getMyTopic(this.queryParams).then(({data})=>{
+      postsApi.list(this.routerName, this.queryParams).then(({data})=>{
         if (data){
           const {records,total,pages} = data
           this.posts = records
@@ -47,6 +45,20 @@ export default {
       this.pagination.page = page
       this.handleListPosts()
     },
+  },
+  mounted() {
+    const splitRoute = this.$route.path.split("/")
+    this.routerName = this.$route.params.rn || splitRoute[splitRoute.length - 1]
+    this.handleListPosts()
+  },
+  watch:{
+    "$route.params.rn"(v, ov){
+      console.log(v)
+      if (v !== ov){
+        this.routerName = v
+        this.handleListPosts()
+      }
+    }
   }
 }
 </script>

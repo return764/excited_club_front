@@ -7,15 +7,16 @@
     <v-col cols="3" class="pr-0">
       <v-sheet elevation="2">
         <div class="d-flex pt-4 pb-2 pl-4">
-          <v-avatar class="mr-2" color="primary" size="40">12</v-avatar>
+          <v-avatar class="mr-2" color="primary" size="40">
+            <v-img :src="user.avatar"/>
+          </v-avatar>
           <div class="d-flex align-center">
-            <div>RETURN小明</div>
+            <div>{{user.name}}</div>
           </div>
         </div>
         <div>
           <v-list dense>
             <v-list-item-group
-                v-model="selectedItem"
                 color="primary"
             >
               <v-list-item to="/bbs/u/myTopic">
@@ -54,8 +55,13 @@
 </template>
 
 <script>
+import {mapGetters} from "vuex";
+
 export default {
-  name: "BBSUserCenterPage"
+  name: "BBSUserCenterPage",
+  computed:{
+    ...mapGetters("account",["user"]),
+  },
 }
 </script>
 
